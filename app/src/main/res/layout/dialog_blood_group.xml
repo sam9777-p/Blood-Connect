@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="300dp"
+    android:layout_height="300dp"
+
+    android:padding="16dp">
+
+    <!-- Center Cancel Button -->
+    <Button
+        android:id="@+id/centerCancel"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:text="X"
+        android:backgroundTint="@color/gray"
+        android:textColor="@android:color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <!-- Circular Blood Group Buttons -->
+    <Button
+        android:id="@+id/bgAPlus"
+        style="@style/BloodGroupButton"
+        android:text="A+"
+        app:layout_constraintCircle="@id/centerCancel"
+        app:layout_constraintCircleRadius="100dp"
+        app:layout_constraintCircleAngle="0"/>
+
+    <Button
+        android:id="@+id/bgAMinus"
+        style="@style/BloodGroupButton"
+        android:text="A-"
+        app:layout_constraintCircle="@id/centerCancel"
+        app:layout_constraintCircleRadius="100dp"
+        app:layout_constraintCircleAngle="55"/>
+
+    <Button
+        android:id="@+id/bgBPlus"
+        style="@style/BloodGroupButton"
+        android:text="B+"
+        app:layout_constraintCircle="@id/centerCancel"
+        app:layout_constraintCircleRadius="100dp"
+        app:layout_constraintCircleAngle="90"/>
+
+    <Button
+        android:id="@+id/bgBMinus"
+        style="@style/BloodGroupButton"
+        android:text="B-"
+        app:layout_constraintCircle="@id/centerCancel"
+        app:layout_constraintCircleRadius="100dp"
+        app:layout_constraintCircleAngle="125"/>
+
+    <Button
+        android:id="@+id/bgABPlus"
+        style="@style/BloodGroupButton"
+        android:text="AB+"
+        app:layout_constraintCircle="@id/centerCancel"
+        app:layout_constraintCircleRadius="100dp"
+        app:layout_constraintCircleAngle="180"/>
+
+    <Button
+        android:id="@+id/bgABMinus"
+        style="@style/BloodGroupButton"
+        android:text="AB-"
+        app:layout_constraintCircle="@id/centerCancel"
+        app:layout_constraintCircleRadius="100dp"
+        app:layout_constraintCircleAngle="235"/>
+
+    <Button
+        android:id="@+id/bgOPlus"
+        style="@style/BloodGroupButton"
+        android:text="O+"
+        app:layout_constraintCircle="@id/centerCancel"
+        app:layout_constraintCircleRadius="100dp"
+        app:layout_constraintCircleAngle="270"/>
+
+    <Button
+        android:id="@+id/bgOMinus"
+        style="@style/BloodGroupButton"
+        android:text="O-"
+        app:layout_constraintCircle="@id/centerCancel"
+        app:layout_constraintCircleRadius="100dp"
+        app:layout_constraintCircleAngle="305"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="24dp"
+        android:gravity="center_horizontal">
+
+        <!-- Logo -->
+        <TextView
+            android:id="@+id/logoText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Blood Connect°"
+            android:textColor="#0039A6"
+            android:textSize="36sp"
+            android:textStyle="bold"
+            android:layout_marginTop="40dp" />
+
+        <!-- Phone number and Change -->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginTop="24dp">
+
+            <ImageView
+                android:id="@+id/flagImage"
+                android:layout_width="32dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_flag_india"
+                android:contentDescription="Flag" />
+
+            <TextView
+                android:id="@+id/phoneText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="9870933456"
+                android:textSize="18sp"
+                android:layout_marginStart="8dp"
+                android:textColor="#000000" />
+
+            <TextView
+                android:id="@+id/changeText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="CHANGE"
+                android:textStyle="bold"
+                android:textSize="14sp"
+                android:textColor="#0066CC"
+                android:layout_marginStart="12dp" />
+        </LinearLayout>
+
+        <!-- Subtitle -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="One Time Password (OTP) has been sent to this number"
+            android:textSize="14sp"
+            android:textColor="#888888"
+            android:layout_marginTop="8dp" />
+
+        <!-- Status text -->
+        <TextView
+            android:id="@+id/statusText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Waiting to auto verify OTP"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:layout_marginTop="24dp"
+            android:textColor="#000000" />
+
+        <!-- OTP input -->
+        <EditText
+            android:id="@+id/otpInput"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginTop="24dp"
+            android:hint="Enter OTP manually"
+            android:gravity="center"
+            android:inputType="number"
+            android:maxLength="6"
+            android:textSize="18sp" />
+
+        <!-- Verify Button -->
+        <Button
+            android:id="@+id/verifyButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Verify"
+            android:layout_marginTop="24dp"
+            android:backgroundTint="#DDDDDD"
+            android:textColor="#000000" />
+
+        <!-- Countdown Timer -->
+        <TextView
+            android:id="@+id/countdownText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Resend OTP in 00:30 seconds"
+            android:textSize="14sp"
+            android:textColor="#888888"
+            android:layout_marginTop="16dp" />
+
+        <!-- WhatsApp OTP Button
+        <Button
+            android:id="@+id/whatsappOtpButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Get OTP via WhatsApp"
+            android:drawableStart="@drawable/ic_whatsapp"
+            android:gravity="start|center_vertical"
+            android:padding="12dp"
+            android:textColor="#AAAAAA"
+            android:enabled="false"
+            android:layout_marginTop="16dp" />
+            -->
+
+        <!-- SMS OTP Button -->
+        <Button
+            android:id="@+id/smsOtpButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Resend OTP via SMS"
+            android:drawableStart="@drawable/ic_sms"
+            android:gravity="start|center_vertical"
+            android:padding="12dp"
+            android:textColor="#AAAAAA"
+            android:enabled="false"
+            android:layout_marginTop="12dp" />
+
+    </LinearLayout>
+</ScrollView>

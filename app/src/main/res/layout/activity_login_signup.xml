@@ -1,44 +1,133 @@
-<?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="@drawable/bg_gradient_login"
-    android:padding="24dp">
+    android:background="@color/white"
+    android:fillViewport="true">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Go ahead and set up your account"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        android:textColor="@android:color/white"
-        android:layout_marginTop="48dp" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Sign in-up to enjoy the best managing experience"
-        android:textSize="14sp"
-        android:textColor="@android:color/white"
-        android:layout_marginTop="8dp" />
-
-    <com.google.android.material.tabs.TabLayout
-        android:id="@+id/tabLayout"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/tab_selector_background"
-        app:tabIndicatorHeight="0dp"
-        app:tabTextColor="@android:color/darker_gray"
-        app:tabSelectedTextColor="@android:color/black"
-        app:tabBackground="@drawable/tab_background_selector"
-        android:layout_marginTop="24dp"
-        android:layout_marginBottom="12dp" />
+        android:fitsSystemWindows="true">
 
-    <androidx.viewpager.widget.ViewPager
-        android:id="@+id/loginSignupPager"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1" />
-</LinearLayout>
+        <!-- App Title -->
+        <LinearLayout
+            android:id="@+id/appTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_marginTop="32dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <ImageView
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:src="@drawable/ic_blood_logo"
+                android:layout_marginTop="26dp"
+                android:contentDescription="App Logo" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="BLOOD CONNECT"
+                android:textStyle="bold"
+                android:textColor="#D32F2F"
+                android:textSize="32sp"
+                android:fontFamily="@font/montserrat_bold"
+                android:layout_gravity="center_vertical"
+                android:layout_marginTop="26dp"
+                android:layout_marginStart="1dp" />
+        </LinearLayout>
+
+        <!-- Illustration -->
+        <ImageView
+            android:id="@+id/illustration"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:src="@drawable/undraw_medicine_hqqg"
+            android:adjustViewBounds="true"
+            android:scaleType="fitCenter"
+            app:layout_constraintTop_toBottomOf="@+id/appTitle"
+            app:layout_constraintBottom_toTopOf="@+id/bottomPanel"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp" />
+
+        <!-- Bottom Panel -->
+        <LinearLayout
+            android:id="@+id/bottomPanel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="24dp"
+            android:background="@android:color/white"
+            app:layout_constraintBottom_toBottomOf="parent">
+
+            <!-- Welcome Message -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Welcome 👋"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="@android:color/black" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Enter your number to proceed"
+                android:textColor="#888888"
+                android:textSize="14sp"
+                android:layout_marginTop="4dp" />
+
+            <!-- Phone Input -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginTop="16dp">
+
+                <com.hbb20.CountryCodePicker
+                    android:id="@+id/countryCodePicker"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:ccp_defaultNameCode="IN"
+                    app:ccp_showFlag="true"
+                    app:ccp_showNameCode="false"
+                    app:ccp_showFullName="false"
+                    app:ccp_autoDetectLanguage="true"
+                    app:ccp_autoDetectCountry="true" />
+
+                <EditText
+                    android:id="@+id/editTextPhone"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="48dp"
+                    android:layout_marginStart="8dp"
+                    android:hint="Mobile Number"
+                    android:inputType="phone"
+                    android:padding="12dp"
+                    android:background="@drawable/rounded_edittext"
+                    android:textColor="#000000"
+                    android:textColorHint="#888888" />
+            </LinearLayout>
+
+            <!-- Continue Button -->
+            <Button
+                android:id="@+id/btnContinue"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Continue"
+                android:visibility="gone"
+                android:layout_marginTop="24dp"
+                android:backgroundTint="#2962FF"
+                android:textColor="@android:color/white" />
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>

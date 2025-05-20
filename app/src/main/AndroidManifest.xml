@@ -1,6 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.example.blood">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_PHONE_NUMBERS" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.CAMERA" />
+
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="false" />
 
     <application
         android:allowBackup="true"
@@ -11,21 +23,23 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Blood"
+        android:windowSoftInputMode="adjustResize"
         tools:targetApi="31">
         <activity
-            android:name=".LoginPagerAdapter"
+            android:name=".DonorProfile"
             android:exported="false" />
         <activity
-            android:name=".LiquidSwipeOnboardingActivity"
+            android:name=".CreatePostActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Blood" />
+        <activity
+            android:name=".HospitalActivity"
             android:exported="false" />
         <activity
-            android:name=".OnboardingPagerAdapter"
+            android:name=".DonorActivity"
             android:exported="false" />
         <activity
-            android:name=".LoginSignupActivity"
-            android:exported="false" />
-        <activity
-            android:name=".MainActivity"
+            android:name=".Splash_Screen"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -33,6 +47,22 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".OtpVerificationActivity"
+            android:exported="false" />
+        <activity
+            android:name=".RoleSelectionActivity"
+            android:exported="false" />
+        <activity
+            android:name=".LiquidSwipeOnboardingActivity"
+            android:exported="false" />
+        <activity
+            android:name=".LoginSignupActivity"
+            android:exported="true"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".MainActivity"
+            android:exported="false" />
     </application>
 
 </manifest>

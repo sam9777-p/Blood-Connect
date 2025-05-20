@@ -1,8 +1,11 @@
 package com.example.blood
+import android.app.Activity
 import android.content.Context
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import androidx.viewpager.widget.PagerAdapter
 import com.example.blood.R
 
@@ -16,6 +19,17 @@ class OnboardingPagerAdapter(private val context: Context) : PagerAdapter() {
 
     override fun instantiateItem(container: ViewGroup, position: Int): Any {
         val view = LayoutInflater.from(context).inflate(layouts[position], container, false)
+
+        if (position == layouts.lastIndex) {
+            val btnGetStarted = view.findViewById<Button>(R.id.btnGetStarted)
+            btnGetStarted?.visibility = View.VISIBLE
+            btnGetStarted?.setOnClickListener {
+                context.startActivity(Intent(context, LoginSignupActivity::class.java))
+                (context as? Activity)?.finish()
+            }
+        }
+
+
         container.addView(view)
         return view
     }

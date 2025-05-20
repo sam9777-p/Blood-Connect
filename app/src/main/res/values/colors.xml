@@ -2,5 +2,17 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="yellow">#FFC801</color>
+
+    <color name="colorPrimary">#C62828</color> <!-- A strong red -->
+    <color name="colorPrimaryDark">#B71C1C</color> <!-- Darker shade for status bar -->
+    <color name="colorAccent">#FF5252</color> <!-- Lighter accent red -->
+    <color name="gray">#BDBDBD</color>
+    <color name="background">#F5F5F5</color>
+    <color name="primary_dark">#B71C1C</color> <!-- Dark Red -->
+    <color name="light_gray">#F7F7F7</color>
+    <color name="purple_500">#6200EE</color>
+    <color name="purple_700">#3700B3</color>
+
 
 </resources>

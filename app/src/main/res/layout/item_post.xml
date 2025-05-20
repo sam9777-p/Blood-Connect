@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:layout_margin="8dp"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    card_view:cardElevation="6dp"
+    card_view:cardCornerRadius="16dp"
+    card_view:cardBackgroundColor="#FFFFFF">
+
+    <LinearLayout
+        android:padding="16dp"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <!-- User Name -->
+        <TextView
+            android:id="@+id/userIdText"
+            android:text="John Doe"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:textColor="#2E2E2E"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <!-- Flair Tag -->
+        <TextView
+            android:id="@+id/postFlair"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/flair_background"
+            android:textColor="#D32F2F"
+            android:fontFamily="sans-serif-medium"
+            android:paddingLeft="12dp"
+            android:paddingRight="12dp"
+            android:paddingTop="6dp"
+            android:paddingBottom="6dp"
+            android:layout_marginTop="8dp"
+            android:textSize="12sp"
+            android:text="Experience" />
+
+        <!-- Title -->
+        <TextView
+            android:id="@+id/titleText"
+            android:text="Blood Donation at Red Cross"
+            android:textSize="17sp"
+            android:textStyle="bold"
+            android:textColor="#D32F2F"
+            android:layout_marginTop="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <!-- Post Content -->
+        <TextView
+            android:id="@+id/contentText"
+            android:text="It was a really good experience..."
+            android:layout_marginTop="6dp"
+            android:textColor="#444444"
+            android:textSize="14sp"
+            android:lineSpacingExtra="4dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <!-- Timestamp -->
+        <TextView
+            android:id="@+id/timestampText"
+            android:text="2 hours ago"
+            android:textSize="12sp"
+            android:textColor="#9E9E9E"
+            android:layout_gravity="end"
+            android:layout_marginTop="12dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>

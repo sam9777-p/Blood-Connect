@@ -3,9 +3,10 @@ import java.io.FileInputStream
 
 pluginManagement {
     repositories {
-        google()
+        google ()
         mavenCentral()
         gradlePluginPortal()
+        maven (url = "https://jitpack.io")
     }
 }
 
@@ -28,6 +29,14 @@ dependencyResolutionManagement {
                 password = githubProperties["gpr.key"] as String? ?: System.getenv("GPR_API_KEY")
             }
         }
+
+        maven (url = "https://jitpack.io")
+
+
+
+
+
+
     }
 }
 

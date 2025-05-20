@@ -4,6 +4,8 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@drawable/bg_gradient_pager3"
+    android:tag="pager3"
+
     android:padding="24dp">
 
     <com.airbnb.lottie.LottieAnimationView
@@ -39,4 +41,21 @@
         android:fontFamily="@font/montserrat_regular"
         android:textSize="16sp"
         android:textColor="@android:color/white" />
+
+    <Button
+        android:id="@+id/btnGetStarted"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Get Started"
+        android:textAllCaps="false"
+        android:layout_below="@id/title1"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="60dp"
+        android:backgroundTint="@android:color/white"
+        android:textColor="@color/primary_dark"
+        android:paddingStart="24dp"
+        android:paddingEnd="24dp"
+        android:visibility="gone"
+        android:textStyle="bold"/>
+
 </RelativeLayout>

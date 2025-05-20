@@ -1,0 +1,78 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="20dp"
+    android:background="@android:color/white">
+
+    <!-- Header -->
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Create a Post"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:textColor="#D32F2F"
+        android:drawableStart="@drawable/ic_edit"
+        android:drawablePadding="8dp"
+        android:layout_marginBottom="20dp"/>
+
+    <!-- Title Input -->
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Post Title">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/postTitleInput"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <!-- Content Input -->
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="What's on your mind?"
+        android:layout_marginTop="16dp">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/postContentInput"
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:gravity="top"
+            android:inputType="textMultiLine"/>
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <!-- Flair Spinner -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Select Flair"
+        android:layout_marginTop="16dp"
+        android:textColor="#757575"
+        android:textSize="14sp"/>
+
+    <Spinner
+        android:id="@+id/flairSpinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:entries="@array/flairs"
+        android:layout_marginBottom="24dp"/>
+
+    <!-- Create Button -->
+    <Button
+        android:id="@+id/createPostButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Create Post"
+        android:textColor="@android:color/white"
+        android:backgroundTint="#D32F2F"
+        android:padding="12dp"
+        android:textAllCaps="false"
+        android:layout_marginTop="16dp"
+        android:layout_gravity="center"/>
+
+</LinearLayout>

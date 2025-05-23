@@ -1,0 +1,83 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:padding="24dp"
+    android:gravity="center"
+    android:background="@android:color/white"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/bloodGroupText"
+        android:text="Blood Group: A+"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:textColor="#B00020"
+        android:layout_marginBottom="16dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/requesterText"
+        android:text="Requested By: XYZ"
+        android:textSize="18sp"
+        android:textColor="#333333"
+        android:layout_marginBottom="8dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/unitsText"
+        android:text="Units Needed: 3"
+        android:textColor="#333333"
+        android:layout_marginBottom="8dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/cityText"
+        android:text="City: Jaipur"
+        android:textColor="#333333"
+        android:layout_marginBottom="8dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/hospitalText"
+        android:text="Hospital: Polo Hospital"
+        android:textColor="#333333"
+        android:layout_marginBottom="24dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <Button
+        android:id="@+id/btnNavigate"
+        android:text="📍 Open Location in Maps"
+        android:textStyle="bold"
+        android:textColor="@android:color/white"
+        android:backgroundTint="#D32F2F"
+        android:layout_marginBottom="12dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+         />
+
+    <Button
+        android:id="@+id/btnDonate"
+        android:text="❤️ Donate Now"
+        android:textStyle="bold"
+        android:textColor="@android:color/white"
+        android:backgroundTint="#C2185B"
+        android:layout_marginBottom="12dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        />
+
+    <Button
+        android:id="@+id/btnIgnore"
+        android:text="Maybe Later"
+        android:textColor="#555555"
+        android:backgroundTint="#E0E0E0"
+        android:layout_marginTop="12dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+         />
+</LinearLayout>

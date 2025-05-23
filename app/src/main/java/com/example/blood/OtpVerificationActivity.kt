@@ -4,6 +4,7 @@ import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.os.CountDownTimer
+import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
@@ -81,14 +82,22 @@ class OtpVerificationActivity : AppCompatActivity() {
     }
 
     private fun startPhoneNumberVerification(phoneNumber: String) {
-        val options = PhoneAuthOptions.newBuilder(FirebaseAuth.getInstance())
-            .setPhoneNumber(phoneNumber)
-            .setTimeout(30L, TimeUnit.SECONDS)
-            .setActivity(this)
-            .setCallbacks(callbacks)
-            .build()
-        PhoneAuthProvider.verifyPhoneNumber(options)
-        startCountdown()  // Start the countdown when OTP is sent
+        try {
+
+
+            val options = PhoneAuthOptions.newBuilder(FirebaseAuth.getInstance())
+                .setPhoneNumber(phoneNumber)
+                .setTimeout(30L, TimeUnit.SECONDS)
+                .setActivity(this)
+                .setCallbacks(callbacks)
+                .build()
+            PhoneAuthProvider.verifyPhoneNumber(options)
+            startCountdown()  // Start the countdown when OTP is sent}
+
+        }
+        catch (e: Exception) {
+            Log.d("OtpVerificationActivity", "Error starting phone number verification: ${e.message}")
+        }
     }
 
     private fun startCountdown() {

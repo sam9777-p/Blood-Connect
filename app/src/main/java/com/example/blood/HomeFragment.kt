@@ -53,6 +53,7 @@ class HomeFragment : Fragment() {
         val donor = binding.radiodonor
         val tvWelcome = binding.tvWelcome
         val tvUserId = binding.tvUserId
+        val requestButton=binding.requestButton
         donor.setOnClickListener {
             val transaction = requireActivity().supportFragmentManager.beginTransaction()
             transaction.replace(R.id.fragment_container, NearbyHospitals())
@@ -63,6 +64,13 @@ class HomeFragment : Fragment() {
             val qrCodeFragment = QRCodeFragment()
             val transaction = requireActivity().supportFragmentManager.beginTransaction()
             transaction.replace(R.id.fragment_container, qrCodeFragment)
+            transaction.addToBackStack(null)
+            transaction.commit()
+        }
+
+        requestButton.setOnClickListener {
+            val transaction = requireActivity().supportFragmentManager.beginTransaction()
+            transaction.replace(R.id.fragment_container, Request())
             transaction.addToBackStack(null)
             transaction.commit()
         }

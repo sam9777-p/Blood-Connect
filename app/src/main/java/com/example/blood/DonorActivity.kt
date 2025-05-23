@@ -1,5 +1,7 @@
 package com.example.blood
 
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import android.widget.TextView
 import androidx.appcompat.app.ActionBarDrawerToggle
@@ -7,11 +9,19 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.appcompat.widget.Toolbar
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import android.Manifest
+import android.content.Intent
+import androidx.appcompat.app.AlertDialog
+import com.google.firebase.firestore.SetOptions
+import com.google.firebase.messaging.FirebaseMessaging
+
 
 class DonorActivity : AppCompatActivity() {
 
@@ -44,11 +54,32 @@ class DonorActivity : AppCompatActivity() {
         FirebaseFirestore.getInstance().collection("Accounts").document(phone).get()
             .addOnSuccessListener { doc ->
                 if (doc.exists()) {
+                    FirebaseMessaging.getInstance().token.addOnCompleteListener { task ->
+                        if (task.isSuccessful) {
+                            val token = task.result
+                            FirebaseFirestore.getInstance().collection("Accounts").document(phone)
+                                .set(mapOf("fcmToken" to token), SetOptions.merge())
+                        }
+                    }
                     textViewUsername.text = "Welcome ${doc.getString("firstName") ?: "User"}"
                     textViewUserId.text = doc.getString("phonenumber") ?: phone
                     textViewBloodGroup.text = doc.getString("bloodGroup") ?: "N/A"
                 }
             }
+
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS)
+                != PackageManager.PERMISSION_GRANTED
+            ) {
+                ActivityCompat.requestPermissions(
+                    this,
+                    arrayOf(Manifest.permission.POST_NOTIFICATIONS),
+                    1
+                )
+            }
+        }
+
 
         navView.setNavigationItemSelectedListener { menuItem ->
             when (menuItem.itemId) {
@@ -57,7 +88,22 @@ class DonorActivity : AppCompatActivity() {
                 R.id.nav_donation_history -> loadFragment(DonorHistory(),true)
                 //R.id.nav_hospital_services -> loadFragment(HospitalServicesFragment())
                 //R.id.nav_blood_bank -> loadFragment(BloodBankFragment())
-                //R.id.nav_request -> loadFragment(RequestFragment())
+                R.id.nav_request -> loadFragment(Request())
+                R.id.nav_logout -> {
+                    AlertDialog.Builder(this)
+                        .setTitle("Logout")
+                        .setMessage("Are you sure you want to logout?")
+                        .setPositiveButton("Yes") { _, _ ->
+                            FirebaseAuth.getInstance().signOut()
+                            val intent = Intent(this, LoginSignupActivity::class.java)
+                            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                            startActivity(intent)
+                            finish()
+                        }
+                        .setNegativeButton("Cancel", null)
+                        .show()
+                }
+
             }
             drawerLayout.closeDrawers()
             true
@@ -67,7 +113,7 @@ class DonorActivity : AppCompatActivity() {
             when (item.itemId) {
                 R.id.nav_home -> loadFragment(HomeFragment())
                 R.id.nav_donate -> loadFragment(CommunityFragment())
-                //R.id.nav_request -> loadFragment(ProfileFragment())
+                R.id.nav_request -> loadFragment(Request())
             }
             true
         }

@@ -37,10 +37,10 @@ class LiquidSwipeOnboardingActivity : AppCompatActivity() {
         highlightIndicator(0)
 
         skipButton.setOnClickListener {
-            navigateToLogin()
+            pager.setCurrentItem(adapter.count - 1, true) // Optional: navigate to last page
         }
 
-        // Auto-slide setup
+        // Auto-slide setup (with layout-safe post)
         handler = Handler(Looper.getMainLooper())
         autoSlideRunnable = object : Runnable {
             override fun run() {
@@ -51,7 +51,10 @@ class LiquidSwipeOnboardingActivity : AppCompatActivity() {
                 }
             }
         }
-        handler.postDelayed(autoSlideRunnable, 4000)
+
+        pager.post {
+            handler.postDelayed(autoSlideRunnable, 4000)
+        }
 
         pager.addOnPageChangeListener(object : androidx.viewpager.widget.ViewPager.OnPageChangeListener {
             override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {}
@@ -61,11 +64,12 @@ class LiquidSwipeOnboardingActivity : AppCompatActivity() {
                 if (position == adapter.count - 1) {
                     handler.removeCallbacks(autoSlideRunnable)
 
-                    val lastPage = pager.findViewWithTag<RelativeLayout>("pager3") // assign tag below
-                    val btnGetStarted = lastPage?.findViewById<Button>(R.id.btnGetStarted)
-                    btnGetStarted?.visibility = View.VISIBLE
-                    btnGetStarted?.setOnClickListener {
-                        navigateToLogin()
+                    val lastPage = pager.findViewWithTag<RelativeLayout>("pager3")
+                    lastPage?.findViewById<Button>(R.id.btnGetStarted)?.apply {
+                        visibility = View.VISIBLE
+                        setOnClickListener {
+                            navigateToLogin()
+                        }
                     }
                 }
             }
@@ -109,6 +113,4 @@ class LiquidSwipeOnboardingActivity : AppCompatActivity() {
         handler.removeCallbacks(autoSlideRunnable)
         super.onDestroy()
     }
-
-
 }

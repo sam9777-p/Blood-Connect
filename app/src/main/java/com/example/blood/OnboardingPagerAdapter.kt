@@ -1,4 +1,5 @@
 package com.example.blood
+
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
@@ -7,7 +8,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import androidx.viewpager.widget.PagerAdapter
-import com.example.blood.R
 
 class OnboardingPagerAdapter(private val context: Context) : PagerAdapter() {
 
@@ -21,6 +21,8 @@ class OnboardingPagerAdapter(private val context: Context) : PagerAdapter() {
         val view = LayoutInflater.from(context).inflate(layouts[position], container, false)
 
         if (position == layouts.lastIndex) {
+            view.tag = "pager3" // ✅ Assign tag for lookup
+
             val btnGetStarted = view.findViewById<Button>(R.id.btnGetStarted)
             btnGetStarted?.visibility = View.VISIBLE
             btnGetStarted?.setOnClickListener {
@@ -28,7 +30,6 @@ class OnboardingPagerAdapter(private val context: Context) : PagerAdapter() {
                 (context as? Activity)?.finish()
             }
         }
-
 
         container.addView(view)
         return view

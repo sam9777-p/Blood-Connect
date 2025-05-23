@@ -6,5 +6,9 @@
     <item android:id="@+id/nav_donation_history" android:icon="@drawable/ic_history" android:title="Donate History" />
     <item android:id="@+id/nav_hospital_services" android:icon="@drawable/ic_hospital" android:title="Hospital Services" />
     <item android:id="@+id/nav_blood_bank" android:icon="@drawable/ic_bloodbank" android:title="Blood Bank Service" />
+    <item
+        android:id="@+id/nav_logout"
+        android:title="Logout"
+        android:icon="@drawable/ic_logout" />
 
 </menu>

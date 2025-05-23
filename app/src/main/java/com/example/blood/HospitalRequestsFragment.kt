@@ -1,6 +1,7 @@
 package com.example.blood
 
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import android.widget.Toast
 import androidx.fragment.app.Fragment
@@ -54,14 +55,41 @@ class HospitalRequestsFragment : Fragment() {
     }
 
     private fun acceptRequest(request: BloodRequest) {
-        FirebaseFirestore.getInstance().collection("BloodRequests")
-            .document(request.id)
-            .update("status", "accepted", "handledBy", FirebaseAuth.getInstance().currentUser?.phoneNumber)
-            .addOnSuccessListener {
-                Toast.makeText(requireContext(), "Request accepted", Toast.LENGTH_SHORT).show()
-                fetchRequests()
+        val db = FirebaseFirestore.getInstance()
+        val hospitalPhone = FirebaseAuth.getInstance().currentUser?.phoneNumber ?: return
+
+        val inventoryRef = db.collection("hospitals")
+            .document(hospitalPhone)
+            .collection("inventory")
+            .document(request.bloodGroup)
+
+        inventoryRef.get().addOnSuccessListener { snapshot ->
+            val availableUnits = snapshot.getLong("units") ?: 0L
+
+            if (availableUnits < request.units) {
+                // Not enough blood → notify donors
+                db.collection("BloodRequests").document(request.id)
+                    .update("status", "notified", "handledBy", hospitalPhone)
+                    .addOnSuccessListener {
+                        Toast.makeText(requireContext(), "Notified donors (low stock)", Toast.LENGTH_SHORT).show()
+                        fetchRequests()
+                    }
+            } else {
+                // Optional: Deduct units and mark as accepted
+                inventoryRef.update("units", availableUnits - request.units).addOnSuccessListener {
+                    //Log.d(TAG, "acceptRequest: ")
+                    Log.d("id", "Actual: ${request.id}")
+                    db.collection("BloodRequests").document(request.id)
+                        .update("status", "fulfilled", "handledBy", hospitalPhone)
+                        .addOnSuccessListener {
+                            Toast.makeText(requireContext(), "Request fulfilled from stock", Toast.LENGTH_SHORT).show()
+                            fetchRequests()
+                        }
+                }
             }
+        }
     }
+
 
     private fun rejectRequest(request: BloodRequest) {
         FirebaseFirestore.getInstance().collection("BloodRequests")

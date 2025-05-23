@@ -12,7 +12,20 @@
           "package_name": "com.example.blood"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "249986354750-os0kn4ikocg141e6mjjoqlvlc3hp8i3n.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.blood",
+            "certificate_hash": "d7e6c8988097cf7010398ae7bdd944f1c56af710"
+          }
+        },
+        {
+          "client_id": "249986354750-2ifdo7h99t6i0vvbgcsm19h64ojso770.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyDe8R0eXzwSN6iVn0eXY4wKE9_mD8LzDkk"
@@ -20,7 +33,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "249986354750-2ifdo7h99t6i0vvbgcsm19h64ojso770.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }

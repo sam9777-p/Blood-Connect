@@ -28,10 +28,10 @@ class HospitalRequestsAdapter(
 
     override fun onBindViewHolder(holder: RequestViewHolder, position: Int) {
         val request = requestList[position]
-        holder.tvRequesterName.text = "Requested by: ${request.name}"
+        holder.tvRequesterName.text = "Requested by: ${request.requesterName}"
         holder.tvBloodGroup.text = "Blood Group: ${request.bloodGroup}"
         holder.tvUnitsNeeded.text = "Units Needed: ${request.units}"
-        holder.tvRequestTime.text = "Requested: ${request.requestedAt}" // Format nicely if needed
+        holder.tvRequestTime.text = "Requested: ${request.timestamp?.toDate()?.toString() ?: "Unknown"}"
 
         holder.btnAccept.setOnClickListener { onAccept(request) }
         holder.btnReject.setOnClickListener { onReject(request) }

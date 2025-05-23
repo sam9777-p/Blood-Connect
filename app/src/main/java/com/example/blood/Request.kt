@@ -41,30 +41,46 @@ class Request : Fragment() {
         val selectedGroup = bloodGroupSpinner.selectedItem.toString()
         val units = unitsEditText.text.toString().toIntOrNull()
         val purpose = purposeEditText.text.toString().trim()
-        val requester = FirebaseAuth.getInstance().currentUser?.phoneNumber ?: return
+        val phone = FirebaseAuth.getInstance().currentUser?.phoneNumber ?: return
 
         if (units == null || units <= 0 || purpose.isEmpty()) {
             Toast.makeText(context, "Please fill all fields correctly", Toast.LENGTH_SHORT).show()
             return
         }
 
-        val requestData = hashMapOf(
-            "bloodGroup" to selectedGroup,
-            "units" to units,
-            "purpose" to purpose,
-            "requester" to requester,
-            "timestamp" to Timestamp.now(),
-            "status" to "pending"
-        )
+        val userDoc = FirebaseFirestore.getInstance().collection("Accounts").document(phone)
+        userDoc.get().addOnSuccessListener { snapshot ->
+            val name = snapshot.getString("firstName") ?: ""
+            val city = snapshot.getString("city") ?: ""
+            val donorFcmToken = snapshot.getString("fcmToken") ?: ""
+            if (name.isEmpty() || city.isEmpty()) {
+                Toast.makeText(context, "Complete profile (name/city) required", Toast.LENGTH_SHORT).show()
+                return@addOnSuccessListener
+            }
 
-        db.collection("BloodRequests")
-            .add(requestData)
-            .addOnSuccessListener {
-                Toast.makeText(context, "Request submitted", Toast.LENGTH_SHORT).show()
-                // Optionally trigger FCM here
-            }
-            .addOnFailureListener {
-                Toast.makeText(context, "Failed to submit request", Toast.LENGTH_SHORT).show()
-            }
+            val requestData = hashMapOf(
+                "bloodGroup" to selectedGroup,
+                "units" to units,
+                "purpose" to purpose,
+                "requester" to phone,
+                "requesterName" to name,
+                "city" to city,
+                "timestamp" to Timestamp.now(),
+                "status" to "pending",
+                "fcm" to donorFcmToken
+            )
+
+            db.collection("BloodRequests")
+                .add(requestData)
+                .addOnSuccessListener { documentRef ->
+                    db.collection("BloodRequests").document(documentRef.id)
+                        .update("id", documentRef.id)
+                    Toast.makeText(context, "Request submitted", Toast.LENGTH_SHORT).show()
+                }
+                .addOnFailureListener {
+                    Toast.makeText(context, "Failed to submit request", Toast.LENGTH_SHORT).show()
+                }
+        }
     }
+
 }

@@ -1,11 +1,21 @@
 package com.example.blood
 
+import android.Manifest
 import android.app.DatePickerDialog
+import android.location.Geocoder
 import android.os.Bundle
 import android.util.Log
+import com.google.firebase.messaging.FirebaseMessaging
 import android.view.*
 import android.widget.*
+import androidx.annotation.RequiresPermission
 import androidx.fragment.app.Fragment
+import android.content.pm.PackageManager
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
+
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.SetOptions
@@ -28,6 +38,9 @@ class ProfileFragment : Fragment() {
     private lateinit var saveButton: Button
     private lateinit var editButton: Button
     private lateinit var cancelButton: Button
+    private lateinit var fusedLocationClient: FusedLocationProviderClient
+    private val LOCATION_PERMISSION_REQUEST_CODE = 101
+
 
     private lateinit var selectedBloodGroup: String
     private var isEditMode = false
@@ -47,6 +60,8 @@ class ProfileFragment : Fragment() {
         saveButton = view.findViewById(R.id.saveProfileButton)
         editButton = view.findViewById(R.id.editProfileButton)
         cancelButton = view.findViewById(R.id.cancelEditButton)
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext())
+
 
         lastDonationDate.setOnClickListener { showDatePicker() }
 
@@ -114,6 +129,7 @@ class ProfileFragment : Fragment() {
         }
     }
 
+    @RequiresPermission(allOf = [Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION])
     private fun saveUserProfile() {
         val userId = FirebaseAuth.getInstance().currentUser?.phoneNumber ?: return
         val db = FirebaseFirestore.getInstance()
@@ -165,6 +181,22 @@ class ProfileFragment : Fragment() {
             .addOnFailureListener {
                 Log.e("Firestore", "Failed to save profile", it)
             }
+
+        if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(requireActivity(), arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), LOCATION_PERMISSION_REQUEST_CODE)
+        } else {
+            saveCity(userId)
+        }
+
+
+
+        FirebaseMessaging.getInstance().token.addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                val token = task.result
+                db.collection("Accounts").document(userId)
+                    .set(mapOf("fcmToken" to token), SetOptions.merge())
+            }
+        }
 
         // Call eligibility API
         /*
@@ -254,4 +286,35 @@ class ProfileFragment : Fragment() {
 
         dialog.show()
     }
+
+    @RequiresPermission(allOf = [Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION])
+    private fun saveCity(userId: String) {
+        fusedLocationClient.lastLocation.addOnSuccessListener { location ->
+            if (location != null) {
+                val geocoder = Geocoder(requireContext(), Locale.getDefault())
+                val addresses = geocoder.getFromLocation(location.latitude, location.longitude, 1)
+                if (!addresses.isNullOrEmpty()) {
+                    val city = addresses[0].locality
+                    if (!city.isNullOrEmpty()) {
+                        FirebaseFirestore.getInstance().collection("Accounts").document(userId)
+                            .set(mapOf("city" to city), SetOptions.merge())
+                    }
+                }
+            }
+        }
+    }
+
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == LOCATION_PERMISSION_REQUEST_CODE) {
+            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                val userId = FirebaseAuth.getInstance().currentUser?.phoneNumber ?: return
+                saveCity(userId)
+            } else {
+                Toast.makeText(requireContext(), "Location permission denied. City won't be saved.", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
 }

@@ -139,6 +139,58 @@ class HospitalActivity : AppCompatActivity() {
     }
 
     private fun onLocationPermissionGranted() {
-        // Fetch location later as needed
+        val fusedLocationProviderClient = com.google.android.gms.location.LocationServices
+            .getFusedLocationProviderClient(this)
+
+        if (ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED &&
+            ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            // Permissions are already checked before calling this, but return for safety
+            return
+        }
+
+        fusedLocationProviderClient.lastLocation
+            .addOnSuccessListener { location ->
+                if (location != null) {
+                    val latitude = location.latitude
+                    val longitude = location.longitude
+
+                    // Use Geocoder to convert lat/lng to a city name
+                    val geocoder = android.location.Geocoder(this)
+                    val addressList = geocoder.getFromLocation(latitude, longitude, 1)
+                    val city = if (!addressList.isNullOrEmpty()) {
+                        addressList[0].locality ?: "Unknown"
+                    } else "Unknown"
+
+                    val userId = FirebaseAuth.getInstance().currentUser?.phoneNumber
+                    if (userId != null) {
+                        val data = mapOf(
+                            "latitude" to latitude,
+                            "longitude" to longitude,
+                            "city" to city
+                        )
+
+                        FirebaseFirestore.getInstance()
+                            .collection("Accounts")
+                            .document(userId)
+                            .update(data)
+                            .addOnSuccessListener {
+                                Toast.makeText(this, "Location updated", Toast.LENGTH_SHORT).show()
+                            }
+                            .addOnFailureListener {
+                                Toast.makeText(this, "Failed to update location", Toast.LENGTH_SHORT).show()
+                            }
+                    }
+                } else {
+                    Toast.makeText(this, "Could not fetch location", Toast.LENGTH_SHORT).show()
+                }
+            }
     }
+
 }

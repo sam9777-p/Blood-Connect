@@ -13,6 +13,16 @@
     <color name="light_gray">#F7F7F7</color>
     <color name="purple_500">#6200EE</color>
     <color name="purple_700">#3700B3</color>
+    <color name="md_theme_background">#FFFFFF</color>
+
+    <color name="md_theme_onBackground">#212121</color>
+    <color name="md_theme_onSurfaceVariant">#757575</color>
+    <color name="md_theme_onSurface">#424242</color>
+
+
+        <color name="md_theme_primary">#D32F2F</color>
+
+        <color name="md_theme_surfaceVariant">#F5F5F5</color>
 
 
 </resources>

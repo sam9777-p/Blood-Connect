@@ -41,18 +41,33 @@ class HospitalRequestsFragment : Fragment() {
         val phone = FirebaseAuth.getInstance().currentUser?.phoneNumber ?: return
         val db = FirebaseFirestore.getInstance()
 
-        db.collection("BloodRequests")
-            .whereEqualTo("status", "pending")
-            .get()
-            .addOnSuccessListener { snapshot ->
-                requestList.clear()
-                for (doc in snapshot.documents) {
-                    val request = doc.toObject(BloodRequest::class.java)
-                    request?.let { requestList.add(it) }
-                }
-                adapter.notifyDataSetChanged()
+        // Step 1: Get hospital's city
+        db.collection("Accounts").document(phone).get()
+            .addOnSuccessListener { doc ->
+                val hospitalCity = doc.getString("city") ?: return@addOnSuccessListener
+
+                // Step 2: Get requests from same city
+                db.collection("BloodRequests")
+                    .whereEqualTo("status", "pending")
+                    .whereEqualTo("city", hospitalCity)
+                    .get()
+                    .addOnSuccessListener { snapshot ->
+                        requestList.clear()
+                        for (doc in snapshot.documents) {
+                            val request = doc.toObject(BloodRequest::class.java)
+                            request?.let { requestList.add(it) }
+                        }
+                        adapter.notifyDataSetChanged()
+                    }
+                    .addOnFailureListener {
+                        Toast.makeText(requireContext(), "Failed to load requests", Toast.LENGTH_SHORT).show()
+                    }
+            }
+            .addOnFailureListener {
+                Toast.makeText(requireContext(), "Failed to get hospital data", Toast.LENGTH_SHORT).show()
             }
     }
+
 
     private fun acceptRequest(request: BloodRequest) {
         val db = FirebaseFirestore.getInstance()

@@ -1,4 +1,3 @@
-// HomeFragment.kt
 package com.example.blood
 
 import android.os.Bundle
@@ -8,8 +7,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.viewpager2.widget.CompositePageTransformer
+import androidx.viewpager2.widget.MarginPageTransformer
 import androidx.viewpager2.widget.ViewPager2
-
 import com.example.blood.databinding.FragmentHomeBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -22,8 +22,8 @@ class HomeFragment : Fragment() {
     private lateinit var bannerAdapter: BannerAdapter
     private lateinit var viewPager: ViewPager2
     private val bannerImages = listOf(
-        R.drawable.banner1,
-        R.drawable.banner2,
+        R.drawable.img2,
+        R.drawable.img3,
         R.drawable.banner3
     )
 
@@ -31,11 +31,15 @@ class HomeFragment : Fragment() {
     private var currentPage = 0
     private val scrollRunnable = object : Runnable {
         override fun run() {
-            if (currentPage == bannerImages.size) currentPage = 0
-            viewPager.setCurrentItem(currentPage++, true)
+            var nextPage = currentPage + 1
+            if (nextPage >= bannerAdapter.itemCount) {
+                nextPage = 1 // loop back to first real item (index 1)
+            }
+            viewPager.setCurrentItem(nextPage, true)
             handler.postDelayed(this, 3000)
         }
     }
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -47,53 +51,87 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         viewPager = binding.viewPagerBanner
-        var qrCodeImage = binding.qrCodeImage
-        val BloodGroup = binding.tvBloodGroup
-        val donor = binding.radiodonor
-        val tvWelcome = binding.tvWelcome
-        val tvUserId = binding.tvUserId
-        val requestButton=binding.requestButton
-        donor.setOnClickListener {
-            val transaction = requireActivity().supportFragmentManager.beginTransaction()
-            transaction.replace(R.id.fragment_container, NearbyHospitals())
-            transaction.addToBackStack(null)
-            transaction.commit()
-        }
-        qrCodeImage.setOnClickListener {
-            val qrCodeFragment = QRCodeFragment()
-            val transaction = requireActivity().supportFragmentManager.beginTransaction()
-            transaction.replace(R.id.fragment_container, qrCodeFragment)
-            transaction.addToBackStack(null)
-            transaction.commit()
-        }
+        val phone = FirebaseAuth.getInstance().currentUser?.phoneNumber ?: " "
+        val db = FirebaseFirestore.getInstance()
 
-        requestButton.setOnClickListener {
-            val transaction = requireActivity().supportFragmentManager.beginTransaction()
-            transaction.replace(R.id.fragment_container, Request())
-            transaction.addToBackStack(null)
-            transaction.commit()
-        }
-
-        val phone=FirebaseAuth.getInstance().currentUser?.phoneNumber ?:" "
-        FirebaseFirestore.getInstance().collection("Accounts").document(phone).get().addOnSuccessListener { data ->
-            data?.let {
-                BloodGroup.text = it.getString("bloodGroup") ?: "N/A"
+        // Set user data
+        db.collection("Accounts").document(phone).get().addOnSuccessListener { doc ->
+            doc?.let {
+                binding.tvBloodGroup.text = "Blood Group: ${it.getString("bloodGroup")}" ?: "N/A"
                 val name = it.getString("firstName") ?: "User"
                 val userId = it.getString("userId") ?: phone
-                tvWelcome.text = "Welcome $name"
-                tvUserId.text = userId
+                binding.tvWelcome.text = "Welcome $name"
+                binding.tvUserId.text = userId
             }
-
         }
+
+        // ViewPager Setup
         bannerAdapter = BannerAdapter(bannerImages)
         viewPager.adapter = bannerAdapter
-        viewPager.clipToPadding = false
-        viewPager.clipChildren = false
-        viewPager.offscreenPageLimit = 3
-        viewPager.getChildAt(0).overScrollMode = View.OVER_SCROLL_NEVER
+        viewPager.setCurrentItem(1, false)
+        currentPage = 1
+
+        val transformer = CompositePageTransformer().apply {
+            addTransformer(MarginPageTransformer(40))
+            addTransformer { page, position ->
+                val r = 1 - kotlin.math.abs(position)
+                page.scaleY = 0.85f + r * 0.15f
+                page.alpha = 0.7f + r * 0.3f
+                page.translationZ = r
+            }
+        }
+
+        viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+            override fun onPageSelected(position: Int) {
+                currentPage = position
+            }
+
+            override fun onPageScrollStateChanged(state: Int) {
+                if (state == ViewPager2.SCROLL_STATE_IDLE) {
+                    when (currentPage) {
+                        0 -> viewPager.setCurrentItem(bannerAdapter.itemCount - 2, false) // last real item
+                        bannerAdapter.itemCount - 1 -> viewPager.setCurrentItem(1, false) // first real item
+                    }
+                }
+            }
+        })
+
 
         handler.post(scrollRunnable)
+
+        // QR Code
+        binding.qrCodeImage.setOnClickListener {
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.fragment_container, QRCodeFragment())
+                .addToBackStack(null)
+                .commit()
+        }
+
+        // Request
+        binding.requestButton.setOnClickListener {
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.fragment_container, Request())
+                .addToBackStack(null)
+                .commit()
+        }
+
+        // Donor Nearby
+        binding.radiodonor.setOnClickListener {
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.fragment_container, NearbyHospitals())
+                .addToBackStack(null)
+                .commit()
+        }
+
+        // CTA Button
+        binding.btnFindLives.setOnClickListener {
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.fragment_container, NearbyHospitals())
+                .addToBackStack(null)
+                .commit()
+        }
     }
 
     override fun onDestroyView() {

@@ -87,40 +87,40 @@ class NearbyHospitals : Fragment() {
         }
     }
 
-    private fun loadHospitalsByCity(city: String) {
-        db.collection("hospitals").get().addOnSuccessListener { hospitalDocs ->
-            val hospitalIds = hospitalDocs.documents.map { it.id }
-
-            // ✅ Prevent crash: ensure hospitalIds is not empty before whereIn()
-            if (hospitalIds.isEmpty()) {
-                hospitalList.clear()
-                adapter.notifyDataSetChanged()
-                return@addOnSuccessListener
-            }
-
-            db.collection("Accounts")
-                .whereIn(FieldPath.documentId(), hospitalIds)
-                .get()
-                .addOnSuccessListener { hospitalInfoDocs ->
-                    hospitalList.clear()
-                    for (doc in hospitalInfoDocs) {
-                        val hospitalCity = doc.getString("city") ?: continue
-                        if (hospitalCity.equals(city, ignoreCase = true)) {
-                            val hospital = HospitalsData(
-                                phoneNumber = doc.id,
-                                hospitalName = doc.getString("hospitalName") ?: "",
-                                address = doc.getString("address") ?: "",
-                                city = hospitalCity,
-                                latitude = doc.getDouble("latitude") ?: 0.0,
-                                longitude = doc.getDouble("longitude") ?: 0.0
-                            )
-                            hospitalList.add(hospital)
-                        }
-                    }
-                    adapter.notifyDataSetChanged()
-                }
-        }
-    }
+//    private fun loadHospitalsByCity(city: String) {
+//        db.collection("hospitals").get().addOnSuccessListener { hospitalDocs ->
+//            val hospitalIds = hospitalDocs.documents.map { it.id }
+//
+//            // ✅ Prevent crash: ensure hospitalIds is not empty before whereIn()
+//            if (hospitalIds.isEmpty()) {
+//                hospitalList.clear()
+//                adapter.notifyDataSetChanged()
+//                return@addOnSuccessListener
+//            }
+//
+//            db.collection("Accounts")
+//                .whereIn(FieldPath.documentId(), hospitalIds)
+//                .get()
+//                .addOnSuccessListener { hospitalInfoDocs ->
+//                    hospitalList.clear()
+//                    for (doc in hospitalInfoDocs) {
+//                        val hospitalCity = doc.getString("city") ?: continue
+//                        if (hospitalCity.equals(city, ignoreCase = true)) {
+//                            val hospital = HospitalsData(
+//                                phoneNumber = doc.id,
+//                                hospitalName = doc.getString("hospitalName") ?: "",
+//                                address = doc.getString("address") ?: "",
+//                                city = hospitalCity,
+//                                latitude = doc.getDouble("latitude") ?: 0.0,
+//                                longitude = doc.getDouble("longitude") ?: 0.0
+//                            )
+//                            hospitalList.add(hospital)
+//                        }
+//                    }
+//                    adapter.notifyDataSetChanged()
+//                }
+//        }
+//    }
 
     private fun loadNearbyHospitals() {
         val donorPhone = currentUser?.phoneNumber ?: return

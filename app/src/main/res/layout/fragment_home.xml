@@ -1,215 +1,180 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/scrollView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true"
-    android:background="@android:color/white">
+    android:background="#FAFAFA">
 
     <LinearLayout
+        android:id="@+id/mainContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:padding="16dp">
 
-        <!-- Welcome Header -->
+        <!-- Welcome Card -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:padding="8dp">
-
-            <ImageView
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:src="@drawable/ic_person"
-            android:contentDescription="Profile Icon"
-            android:layout_marginEnd="8dp" />
+            android:orientation="vertical"
+            android:padding="16dp"
+            android:background="@drawable/bg_welcome_card"
+            android:elevation="4dp"
+            android:layout_marginBottom="16dp">
 
             <TextView
                 android:id="@+id/tvWelcome"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Welcome "
-                android:textSize="18sp"
+                android:text="Welcome Lifesaver"
+                android:textSize="20sp"
                 android:textStyle="bold"
-                android:textColor="#000000" />
+                android:textColor="#D32F2F" />
+
+            <TextView
+                android:id="@+id/tvUserId"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="User ID"
+                android:textSize="14sp"
+                android:textColor="#757575"
+                android:layout_marginTop="4dp" />
+
+            <TextView
+                android:id="@+id/tvBloodGroup"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Blood Group: A+"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textColor="#C62828"
+                android:layout_marginTop="8dp" />
         </LinearLayout>
 
-        <!-- User ID and Blood Group -->
+        <!-- Carousel -->
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/viewPagerBanner"
+            android:layout_width="match_parent"
+            android:layout_height="350dp"
+            android:layout_marginBottom="24dp" />
+
+        <!-- Action Buttons -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_marginBottom="24dp"
+            android:weightSum="3">
 
-            android:background="@drawable/bg_card"
-            android:padding="12dp"
-            android:layout_marginTop="12dp"
-            android:elevation="4dp">
+            <ImageView
+                android:id="@+id/qrCodeImage"
+                android:layout_width="0dp"
+                android:layout_height="80dp"
+                android:layout_weight="1"
+                android:src="@drawable/ic_qr_code"
+                android:layout_marginEnd="8dp"
+                android:contentDescription="QR"
+                android:background="@drawable/bg_rounded_white"
+                android:padding="12dp" />
 
-            <LinearLayout
+            <Button
+                android:id="@+id/requestButton"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:orientation="vertical">
+                android:text="Request \n Blood"
+                android:textColor="#FFFFFF"
+                android:backgroundTint="#D32F2F"
+                android:layout_marginEnd="8dp" />
 
-                <TextView
-                    android:id="@+id/tvUserId"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="USAVER–573713"
-                    android:textStyle="bold"
-                    android:textSize="16sp" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="USER ID"
-                    android:textSize="12sp"
-                    android:textColor="#888888" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="wrap_content"
+            <Button
+                android:id="@+id/radiodonor"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:gravity="center">
-
-                <ImageView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:src="@drawable/blood_drop" />
-
-                <TextView
-                    android:id="@+id/tvBloodGroup"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text=" "
-                    android:textStyle="bold"
-                    android:textSize="16sp" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Blood Group"
-                    android:textSize="12sp"
-                    android:textColor="#888888" />
-            </LinearLayout>
+                android:layout_weight="1"
+                android:text="Nearby\nHospitals"
+                android:textColor="#FFFFFF"
+                android:backgroundTint="#D32F2F" />
         </LinearLayout>
 
-        <!-- Sliding Banner (ViewPager2) -->
-        <androidx.viewpager2.widget.ViewPager2
-            android:id="@+id/viewPagerBanner"
-            android:layout_width="match_parent"
-            android:layout_height="180dp"
-            android:layout_marginTop="16dp"
-            android:clipToPadding="false"
-            android:clipChildren="false"
-            android:padding="4dp" />
-
-        <!-- Action Buttons -->
-        <GridLayout
+        <!-- Testimonial Section -->
+        <LinearLayout
+            android:id="@+id/impactSection"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:columnCount="2"
-            android:layout_marginTop="16dp"
-            android:rowCount="2"
-            android:alignmentMode="alignMargins"
-            android:columnOrderPreserved="false"
-            android:useDefaultMargins="true">
+            android:orientation="vertical"
+            android:padding="16dp"
+            android:background="@drawable/bg_rounded_white"
+            android:elevation="4dp">
 
             <LinearLayout
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_columnWeight="1"
-                android:orientation="vertical"
+                android:orientation="horizontal"
                 android:gravity="center"
-                android:background="@drawable/bg_card"
-                android:padding="16dp">
+                android:layout_marginBottom="16dp">
 
                 <ImageView
-                    android:id="@+id/requestButton"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:src="@drawable/ic_request" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Request for Blood"
-                    android:textStyle="bold"
-                    android:layout_marginTop="8dp" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_columnWeight="1"
-                android:orientation="vertical"
-                android:gravity="center"
-                android:background="@drawable/bg_card"
-                android:padding="16dp">
+                    android:id="@+id/imageLeft"
+                    android:layout_width="0dp"
+                    android:layout_height="220dp"
+                    android:layout_weight="1"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/img"
+                    android:layout_marginEnd="8dp"
+                    android:background="@drawable/bg_image_rounded" />
 
                 <ImageView
-                    android:id="@+id/radiodonor"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:src="@drawable/ic_donate" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Donate"
-                    android:textStyle="bold"
-                    android:layout_marginTop="8dp" />
+                    android:id="@+id/imageRight"
+                    android:layout_width="0dp"
+                    android:layout_height="220dp"
+                    android:layout_weight="1"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/img_1"
+                    android:background="@drawable/bg_image_rounded" />
             </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="0dp"
+            <TextView
+                android:id="@+id/testimonialText"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_columnWeight="1"
-                android:orientation="vertical"
-                android:gravity="center"
-                android:background="@drawable/bg_card"
-                android:padding="16dp">
+                android:text="“Heroes like you helped my son in his battle.”"
+                android:textAlignment="center"
+                android:textColor="#424242"
+                android:textSize="16sp"
+                android:layout_marginBottom="16dp" />
 
-                <ImageView
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:src="@drawable/ic_location" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="USavers Near"
-                    android:textStyle="bold"
-                    android:layout_marginTop="8dp" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="0dp"
+            <Button
+                android:id="@+id/btnFindLives"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_columnWeight="1"
-                android:orientation="vertical"
+                android:text="Find lives to impact"
+                android:textColor="#FFFFFF"
+                android:backgroundTint="#000000"
+                android:layout_marginBottom="20dp" />
+
+            <TextView
+                android:id="@+id/footerText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Keep Spreading Love!"
+                android:textSize="20sp"
+                android:textColor="#000000"
+                android:textStyle="bold"
                 android:gravity="center"
-                android:background="@drawable/bg_card"
-                android:padding="16dp">
+                android:layout_marginTop="8dp" />
 
-                <ImageView
-                    android:id="@+id/qrCodeImage"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:src="@drawable/ic_qr_code" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="QR Code"
-                    android:textStyle="bold"
-                    android:layout_marginTop="8dp" />
-            </LinearLayout>
-        </GridLayout>
+            <TextView
+                android:id="@+id/footerSubText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="with Blood Connect’s Social Impact Plan"
+                android:textSize="14sp"
+                android:textColor="#757575"
+                android:gravity="center"
+                android:layout_marginBottom="16dp" />
+        </LinearLayout>
     </LinearLayout>
 </ScrollView>
-

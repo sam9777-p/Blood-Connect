@@ -11,5 +11,8 @@ data class BloodRequest(
     val requesterPhone: String = "",
     val hospitalId: String = "",
     var timestamp: com.google.firebase.Timestamp? = null,
-    val donorFcmToken : String = ""
+    val donorFcmToken : String = "",
+    val interestedDonors: List<String> = emptyList(),
+    val handledBy: String = "",
+
 )

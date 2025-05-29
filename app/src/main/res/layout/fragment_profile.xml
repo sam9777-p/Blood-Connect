@@ -1,153 +1,175 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/profileFragmentRoot"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:padding="24dp"
-    android:background="@color/white">
+    android:layout_height="match_parent">
 
-    <LinearLayout
+    <com.google.android.material.progressindicator.LinearProgressIndicator
+        android:id="@+id/topProgressBar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:gravity="center_horizontal">
+        android:layout_height="4dp"
+        android:visibility="gone"
+        style="@style/Widget.Material3.LinearProgressIndicator"
+        android:indeterminate="true"
+        app:indicatorColor="@color/md_theme_primary"
+        app:trackColor="@color/md_theme_surfaceVariant"
+        app:trackThickness="4dp" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Complete Your Profile"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            android:layout_marginBottom="16dp"
-            android:textColor="@android:color/black"/>
+    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="24dp"
+        android:background="@color/white">
 
-        <!-- Blood Group Field -->
-        <TextView
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Select Blood Group"
-            android:textStyle="bold"/>
+            android:orientation="vertical"
+            android:gravity="center_horizontal">
 
-        <EditText
-            android:id="@+id/bloodGroupField"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:focusable="false"
-            android:clickable="true"
-            android:hint="Tap to select"
-            android:background="@drawable/edittext_background"
-            android:padding="12dp"
-            android:layout_marginBottom="16dp"/>
-
-        <!-- Gender Selection -->
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Gender"
-            android:textStyle="bold"/>
-
-        <RadioGroup
-            android:id="@+id/genderGroup"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginBottom="16dp">
-
-            <RadioButton
-                android:id="@+id/male"
+            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Male" />
+                android:text="Complete Your Profile"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="16dp"
+                android:textColor="@android:color/black"/>
 
-            <RadioButton
-                android:id="@+id/female"
-                android:layout_width="wrap_content"
+            <!-- Blood Group Field -->
+            <TextView
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Female" />
+                android:text="Select Blood Group"
+                android:textStyle="bold"/>
 
-            <RadioButton
-                android:id="@+id/other"
-                android:layout_width="wrap_content"
+            <EditText
+                android:id="@+id/bloodGroupField"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:focusable="false"
+                android:clickable="true"
+                android:hint="Tap to select"
+                android:background="@drawable/edittext_background"
+                android:padding="12dp"
+                android:layout_marginBottom="16dp"/>
+
+            <!-- Gender Selection -->
+            <TextView
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Other" />
-        </RadioGroup>
+                android:text="Gender"
+                android:textStyle="bold"/>
 
-        <!-- Age -->
-        <EditText
-            android:id="@+id/ageInput"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:hint="Age"
-            android:inputType="number"
-            android:layout_marginBottom="12dp"/>
+            <RadioGroup
+                android:id="@+id/genderGroup"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="16dp">
 
-        <!-- Weight -->
-        <EditText
-            android:id="@+id/weightInput"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:hint="Weight (kg)"
-            android:inputType="numberDecimal"
-            android:layout_marginBottom="12dp"/>
+                <RadioButton
+                    android:id="@+id/male"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Male" />
 
-        <!-- Height -->
-        <EditText
-            android:id="@+id/heightInput"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:hint="Height (cm)"
-            android:inputType="numberDecimal"
-            android:layout_marginBottom="12dp"/>
+                <RadioButton
+                    android:id="@+id/female"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Female" />
 
-        <!-- Haemoglobin -->
-        <EditText
-            android:id="@+id/haemoglobinInput"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:hint="Haemoglobin (g/dL)"
-            android:inputType="numberDecimal"
-            android:layout_marginBottom="12dp"/>
+                <RadioButton
+                    android:id="@+id/other"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Other" />
+            </RadioGroup>
 
-        <!-- Last Donation Date -->
-        <EditText
-            android:id="@+id/lastDonationDate"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:hint="Last Donation Date"
-            android:focusable="false"
-            android:clickable="true"
-            android:drawableEnd="@drawable/ic_calendar"
-            android:layout_marginBottom="24dp"/>
+            <!-- Age -->
+            <EditText
+                android:id="@+id/ageInput"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:hint="Age"
+                android:inputType="number"
+                android:layout_marginBottom="12dp"/>
 
-        <!-- Save / Edit Buttons -->
-        <Button
-            android:id="@+id/saveProfileButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Save"
-            android:backgroundTint="@color/colorPrimary"
-            android:textColor="@android:color/white"
-            android:visibility="visible"/>
+            <!-- Weight -->
+            <EditText
+                android:id="@+id/weightInput"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:hint="Weight (kg)"
+                android:inputType="numberDecimal"
+                android:layout_marginBottom="12dp"/>
 
-        <Button
-            android:id="@+id/editProfileButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Edit"
-            android:backgroundTint="@color/colorPrimary"
-            android:textColor="@android:color/white"
-            android:layout_marginTop="12dp"
-            android:visibility="gone"/>
-        <Button
-            android:id="@+id/cancelEditButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Cancel"
-            android:layout_marginTop="8dp"
-            android:backgroundTint="@color/gray"
-            android:textColor="@android:color/white"
-            android:visibility="gone" />
+            <!-- Height -->
+            <EditText
+                android:id="@+id/heightInput"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:hint="Height (cm)"
+                android:inputType="numberDecimal"
+                android:layout_marginBottom="12dp"/>
 
-    </LinearLayout>
-</ScrollView>
+            <!-- Haemoglobin -->
+            <EditText
+                android:id="@+id/haemoglobinInput"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:hint="Haemoglobin (g/dL)"
+                android:inputType="numberDecimal"
+                android:layout_marginBottom="12dp"/>
 
+            <!-- Last Donation Date -->
+            <EditText
+                android:id="@+id/lastDonationDate"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:hint="Last Donation Date"
+                android:focusable="false"
+                android:clickable="true"
+                android:drawableEnd="@drawable/ic_calendar"
+                android:layout_marginBottom="24dp"/>
+
+            <!-- Save / Edit Buttons -->
+            <Button
+                android:id="@+id/saveProfileButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Save"
+                android:backgroundTint="@color/colorPrimary"
+                android:textColor="@android:color/white"
+                android:visibility="visible"/>
+
+            <Button
+                android:id="@+id/editProfileButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Edit"
+                android:backgroundTint="@color/colorPrimary"
+                android:textColor="@android:color/white"
+                android:layout_marginTop="12dp"
+                android:visibility="gone"/>
+            <Button
+                android:id="@+id/cancelEditButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Cancel"
+                android:layout_marginTop="8dp"
+                android:backgroundTint="@color/gray"
+                android:textColor="@android:color/white"
+                android:visibility="gone" />
+
+        </LinearLayout>
+    </ScrollView>
+
+
+
+    <!-- Material 3 CircularProgressIndicator -->
+
+</FrameLayout>

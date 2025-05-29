@@ -13,7 +13,10 @@ import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
+import com.example.blood.viewmodel.LoginSignupViewModel
 import com.google.android.gms.auth.api.identity.GetPhoneNumberHintIntentRequest
 import com.google.android.gms.auth.api.identity.Identity
 import com.google.android.gms.auth.api.identity.SignInClient
@@ -25,6 +28,8 @@ class LoginSignupActivity : AppCompatActivity() {
     private lateinit var phoneEditText: EditText
     private lateinit var continueBtn: Button
     private lateinit var signInClient: SignInClient
+
+    private val viewModel: LoginSignupViewModel by viewModels()
 
     private val phoneNumberHintLauncher = registerForActivityResult(
         ActivityResultContracts.StartIntentSenderForResult()
@@ -45,20 +50,20 @@ class LoginSignupActivity : AppCompatActivity() {
                 phoneEditText.setSelection(strippedNumber.length)
                 ccp.setFullNumber("+" + ccp.selectedCountryCode + strippedNumber)
                 continueBtn.visibility = if (strippedNumber.length in 9..12) View.VISIBLE else View.GONE
-            }
-                ?: Log.e("PhoneHint", "No number returned from hint picker")
+
+                // Save in ViewModel
+                viewModel.setPhoneNumber(strippedNumber)
+            } ?: Log.e("PhoneHint", "No number returned from hint picker")
         } else {
             Log.d("PhoneHint", "User cancelled phone hint dialog")
         }
-
     }
-
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login_signup)
         enableEdgeToEdge()
+
         ccp = findViewById(R.id.countryCodePicker)
         phoneEditText = findViewById(R.id.editTextPhone)
         continueBtn = findViewById(R.id.btnContinue)
@@ -69,6 +74,7 @@ class LoginSignupActivity : AppCompatActivity() {
             override fun afterTextChanged(s: Editable?) {
                 val phone = s.toString().trim()
                 continueBtn.visibility = if (phone.length in 9..12) View.VISIBLE else View.GONE
+                viewModel.setPhoneNumber(phone)
             }
 
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
@@ -85,6 +91,14 @@ class LoginSignupActivity : AppCompatActivity() {
                 startActivity(intent)
             } else {
                 Toast.makeText(this, "Enter valid phone number", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        viewModel.phoneNumber.observe(this) { savedPhone ->
+            if (savedPhone != null && phoneEditText.text.toString().trim() != savedPhone) {
+                phoneEditText.setText(savedPhone)
+                phoneEditText.setSelection(savedPhone.length)
+                continueBtn.visibility = if (savedPhone.length in 9..12) View.VISIBLE else View.GONE
             }
         }
 

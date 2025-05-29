@@ -6,6 +6,8 @@ import android.view.*
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.blood.adapters.HospitalRequestsAdapter
+import com.example.blood.data.BloodRequest
 import com.example.blood.databinding.FragmentHospitalRequestsBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -26,11 +28,14 @@ class HospitalRequestsFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        adapter = HospitalRequestsAdapter(requestList,
+        adapter = HospitalRequestsAdapter(
+            requestList,
             onAccept = { request -> acceptRequest(request) },
             onReject = { request -> rejectRequest(request) }
         )
-
+        binding.shimmerLayout.startShimmer()
+        binding.shimmerLayout.visibility = View.VISIBLE
+        binding.hospitalRequestsRecyclerView.visibility = View.GONE
         binding.hospitalRequestsRecyclerView.layoutManager = LinearLayoutManager(requireContext())
         binding.hospitalRequestsRecyclerView.adapter = adapter
 
@@ -57,6 +62,11 @@ class HospitalRequestsFragment : Fragment() {
                             val request = doc.toObject(BloodRequest::class.java)
                             request?.let { requestList.add(it) }
                         }
+
+                        binding.shimmerLayout.stopShimmer()
+                        binding.shimmerLayout.visibility = View.GONE
+                        binding.hospitalRequestsRecyclerView.visibility = View.VISIBLE
+
                         adapter.notifyDataSetChanged()
                     }
                     .addOnFailureListener {

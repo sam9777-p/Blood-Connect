@@ -1,0 +1,16 @@
+<!-- res/drawable/circle_gradient_red.xml -->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:right="2dp" android:left="2dp" android:top="2dp" android:bottom="2dp">
+        <shape android:shape="oval">
+            <solid android:color="#33FF5A5F" />
+        </shape>
+    </item>
+    <item>
+        <shape android:shape="oval">
+            <gradient
+                android:startColor="#FF5A5F"
+                android:endColor="#D32F2F"
+                android:angle="135"/>
+        </shape>
+    </item>
+</layer-list>

@@ -24,6 +24,7 @@
         <item>Suggestion</item>
         <item>General</item>
     </string-array>
+    <string name="hospital_icon">Hospital Icon</string>
 
 
     <string name="lorem_ipsum">

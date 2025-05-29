@@ -114,6 +114,7 @@ dependencies {
     implementation ("androidx.gridlayout:gridlayout:1.0.0")
     implementation("me.relex:circleindicator:2.1.6")
 
-
+    //shimmer effect
+    implementation ("com.facebook.shimmer:shimmer:0.5.0")
 
 }

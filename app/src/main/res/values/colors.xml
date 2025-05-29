@@ -25,4 +25,18 @@
         <color name="md_theme_surfaceVariant">#F5F5F5</color>
 
 
+
+        <!-- Material 3 primary theme colors -->
+
+        <color name="md_theme_onPrimary">#FFFFFF</color>
+
+        <!-- Backgrounds -->
+    <color name="glass_background">#FDFDFDBB</color> <!-- Translucent white -->
+
+    <!-- Optional -->
+        <color name="md_theme_secondary">#FFCDD2</color>
+        <color name="md_theme_onSecondary">#000000</color>
+
+
+
 </resources>

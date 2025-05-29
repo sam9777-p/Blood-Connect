@@ -8,6 +8,9 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.blood.adapters.InventoryAdapter
+import com.example.blood.data.InventoryItem
+import com.facebook.shimmer.ShimmerFrameLayout
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 
@@ -17,7 +20,7 @@ class HospitalHomeFragment : Fragment() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var inventoryAdapter: InventoryAdapter
     private val inventoryList = mutableListOf<InventoryItem>()
-
+    private lateinit var shimmerLayout: ShimmerFrameLayout
     private val firestore = FirebaseFirestore.getInstance()
     private val auth = FirebaseAuth.getInstance()
 
@@ -25,6 +28,7 @@ class HospitalHomeFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_hospital_home, container, false)
+        shimmerLayout = view.findViewById<ShimmerFrameLayout>(R.id.shimmerLayout)
         recyclerView = view.findViewById(R.id.inventoryRecyclerView)
         recyclerView.layoutManager = GridLayoutManager(requireContext(), 2)
         inventoryAdapter = InventoryAdapter(inventoryList)
@@ -34,45 +38,22 @@ class HospitalHomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        showShimmer()
         fetchInventory()
     }
 
-   /* private fun fetchInventory() {
-        val uid = auth.currentUser?.phoneNumber ?: return
-        val inventoryRef = firestore.collection("hospitals").document(uid).collection("inventory")
-
-        inventoryRef.get().addOnSuccessListener { snapshot ->
-            inventoryList.clear()
-            for (doc in snapshot.documents) {
-                val item = doc.toObject(InventoryItem::class.java)
-                item?.let { inventoryList.add(it) }
-            }
-            inventoryAdapter.notifyDataSetChanged()
-        }.addOnFailureListener {
-            Toast.makeText(requireContext(), "Failed to load inventory", Toast.LENGTH_SHORT).show()
-        }
+    private fun showShimmer() {
+        shimmerLayout.startShimmer()
+        shimmerLayout.visibility = View.VISIBLE
+        recyclerView.visibility = View.GONE
     }
 
-    private fun fetchInventory() {
-        val userId = auth.currentUser?.phoneNumber ?: return
+    private fun hideShimmer() {
+        shimmerLayout.stopShimmer()
+        shimmerLayout.visibility = View.GONE
+        recyclerView.visibility = View.VISIBLE
+    }
 
-        firestore.collection("hospitals")
-            .document(userId)
-            .collection("inventory")
-            .get()
-            .addOnSuccessListener { snapshot ->
-                val bloodList = snapshot.documents.mapNotNull { doc ->
-                    val type = doc.id
-                    val units = doc.getLong("units")?.toInt() ?: 0
-                    val status = doc.getString("status") ?: "Low"
-                    InventoryItem(type, units, status)
-                }
-                recyclerView.adapter = InventoryAdapter(bloodList)
-            }
-            .addOnFailureListener {
-                Toast.makeText(requireContext(), "Failed to load inventory", Toast.LENGTH_SHORT).show()
-            }
-    }*/
 
     private fun fetchInventory() {
         val userId = FirebaseAuth.getInstance().currentUser?.phoneNumber ?: return
@@ -104,7 +85,11 @@ class HospitalHomeFragment : Fragment() {
                     bloodList.add(InventoryItem(type, units, status))
                 }
                 recyclerView.adapter= InventoryAdapter(bloodList)
+
+                hideShimmer()
             }
+        }.addOnFailureListener {
+            hideShimmer()
         }
     }
 

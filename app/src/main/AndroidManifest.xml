@@ -29,11 +29,11 @@
         <activity
             android:name=".RequestFulfilledActivity"
             android:exported="false"
-            android:parentActivityName=".DonorActivity"/>
+            android:parentActivityName=".ui.donor.DonorActivity"/>
         <activity
             android:name=".DonorRequestNotification"
             android:exported="false"
-            android:parentActivityName=".DonorActivity"/>
+            android:parentActivityName=".ui.donor.DonorActivity"/>
         <activity
             android:name=".DonorProfile"
             android:exported="false" />
@@ -45,7 +45,7 @@
             android:name=".HospitalActivity"
             android:exported="false" />
         <activity
-            android:name=".DonorActivity"
+            android:name=".ui.donor.DonorActivity"
             android:exported="false" />
         <activity
             android:name=".Splash_Screen"

@@ -6,4 +6,16 @@
     </style>
 
     <style name="Theme.Blood" parent="Base.Theme.Blood" />
+
+    <style name="Theme.YourApp" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- Primary colors -->
+        <item name="colorPrimary">@color/md_theme_primary</item>
+        <item name="colorOnPrimary">@color/md_theme_onPrimary</item>
+
+        <!-- Surface and background -->
+        <item name="android:colorBackground">@color/md_theme_background</item>
+        <item name="colorSurfaceVariant">@color/md_theme_surfaceVariant</item>
+        <item name="colorOnSurfaceVariant">@color/md_theme_onSurfaceVariant</item>
+    </style>
+
 </resources>

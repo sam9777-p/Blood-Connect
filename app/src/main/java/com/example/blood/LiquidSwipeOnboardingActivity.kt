@@ -12,6 +12,7 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import com.cuberto.liquid_swipe.LiquidPager
+import com.example.blood.adapters.OnboardingPagerAdapter
 
 class LiquidSwipeOnboardingActivity : AppCompatActivity() {
     private lateinit var pager: LiquidPager

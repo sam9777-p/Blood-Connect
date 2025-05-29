@@ -1,5 +1,6 @@
 package com.example.blood
 
+import com.example.blood.data.BloodRequest
 import com.google.firebase.firestore.FirebaseFirestore
 
 class RequestRepository {

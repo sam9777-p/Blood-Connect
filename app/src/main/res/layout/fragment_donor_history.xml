@@ -1,39 +1,44 @@
-<?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/root_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
-    android:padding="16dp">
+    android:background="@color/glass_background"
+    android:paddingTop="16dp"
+    android:paddingBottom="4dp">
 
+
+   <!-- Title -->
    <TextView
        android:id="@+id/historyTitle"
        android:layout_width="wrap_content"
        android:layout_height="wrap_content"
        android:text="Donation History"
-       android:textSize="24sp"
+       android:textSize="26sp"
        android:textStyle="bold"
-       android:textColor="@color/primary_dark"
+       android:textColor="@color/md_theme_primary"
        android:layout_centerHorizontal="true"
-       android:layout_marginBottom="12dp" />
+       android:layout_marginBottom="6dp" />
 
+   <!-- No donation text -->
    <TextView
        android:id="@+id/noHistoryText"
        android:layout_width="wrap_content"
        android:layout_height="wrap_content"
        android:text="No donations yet."
        android:textSize="16sp"
-       android:textColor="@color/gray"
+       android:textColor="@color/md_theme_onSurfaceVariant"
        android:layout_centerInParent="true"
        android:visibility="gone" />
 
+   <!-- RecyclerView -->
    <androidx.recyclerview.widget.RecyclerView
        android:id="@+id/donationRecyclerView"
        android:layout_width="match_parent"
        android:layout_height="match_parent"
        android:layout_below="@id/historyTitle"
-       android:layout_marginTop="16dp"
-       android:paddingBottom="12dp"
-       android:clipToPadding="false" />
-
+       android:layout_marginTop="12dp"
+       android:padding="12dp"
+       android:clipToPadding="false"
+       android:scrollbars="none" />
 </RelativeLayout>

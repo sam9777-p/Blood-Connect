@@ -15,6 +15,77 @@
         android:layout_marginBottom="16dp"
         android:layout_marginTop="8dp" />
 
+    <com.facebook.shimmer.ShimmerFrameLayout
+        android:id="@+id/shimmerLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="visible"
+        app:layout_constraintTop_toBottomOf="@id/bloodStockTitle"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="8dp">
+
+            <!-- Row 1 -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:weightSum="2">
+
+                <include layout="@layout/shimmer_inventory_item" />
+                <include layout="@layout/shimmer_inventory_item" />
+
+            </LinearLayout>
+
+            <!-- Row 2 -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:weightSum="2">
+
+                <include layout="@layout/shimmer_inventory_item" />
+                <include layout="@layout/shimmer_inventory_item" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:weightSum="2">
+
+                <include layout="@layout/shimmer_inventory_item" />
+                <include layout="@layout/shimmer_inventory_item" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:weightSum="2">
+
+                <include layout="@layout/shimmer_inventory_item" />
+                <include layout="@layout/shimmer_inventory_item" />
+
+            </LinearLayout>
+
+            <!-- Add more rows as needed -->
+        </LinearLayout>
+    </com.facebook.shimmer.ShimmerFrameLayout>
+
+
+
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/inventoryRecyclerView"
         android:layout_width="0dp"

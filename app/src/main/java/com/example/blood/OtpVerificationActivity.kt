@@ -3,19 +3,14 @@ package com.example.blood
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
-import android.os.CountDownTimer
 import android.util.Log
-import android.widget.Button
-import android.widget.EditText
-import android.widget.ImageView
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Observer
+import com.example.blood.viewmodel.OtpVerificationViewModel
 import com.google.firebase.FirebaseException
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.PhoneAuthCredential
-import com.google.firebase.auth.PhoneAuthOptions
-import com.google.firebase.auth.PhoneAuthProvider
+import com.google.firebase.auth.*
 import java.util.concurrent.TimeUnit
 
 class OtpVerificationActivity : AppCompatActivity() {
@@ -26,9 +21,10 @@ class OtpVerificationActivity : AppCompatActivity() {
     private lateinit var otpInput: EditText
     private lateinit var verifyButton: Button
     private lateinit var resendOtpButton: Button
-    private var verificationId: String? = null
-    private lateinit var countdownTimer: CountDownTimer
     private lateinit var phoneNumber: String
+    private var verificationId: String? = null
+
+    private val viewModel: OtpVerificationViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,26 +38,46 @@ class OtpVerificationActivity : AppCompatActivity() {
         resendOtpButton = findViewById(R.id.smsOtpButton)
 
         phoneNumber = intent.getStringExtra("phoneNumber") ?: ""
-        phoneText.text = phoneNumber
         val countryIso = intent.getStringExtra("countryIso")
+        phoneText.text = phoneNumber
 
         val flagImage = findViewById<ImageView>(R.id.flagImage)
         countryIso?.let {
             val resId = resources.getIdentifier("ic_flag_$it", "drawable", packageName)
-            if (resId != 0) {
-                flagImage.setImageResource(resId)
-            } else {
-                flagImage.setImageResource(R.drawable.ic_flag_india) // fallback flag
+            flagImage.setImageResource(if (resId != 0) resId else R.drawable.ic_flag_india)
+        }
+
+        startPhoneNumberVerification(phoneNumber)
+
+        // 🔁 LiveData Observers
+        viewModel.countdownText.observe(this, Observer {
+            countdownText.text = it
+        })
+
+        viewModel.resendEnabled.observe(this, Observer { enabled ->
+            resendOtpButton.isEnabled = enabled
+            resendOtpButton.setTextColor(
+                if (enabled) Color.parseColor("#0066CC")
+                else Color.parseColor("#AAAAAA")
+            )
+        })
+
+        viewModel.otp.observe(this, Observer { code ->
+            if (otpInput.text.toString() != code) {
+                otpInput.setText(code)
+            }
+        })
+
+        // 💬 OTP input tracking
+        otpInput.setOnFocusChangeListener { _, hasFocus ->
+            if (!hasFocus) {
+                viewModel.updateOtp(otpInput.text.toString())
             }
         }
 
-        // Firebase phone auth
-        startPhoneNumberVerification(phoneNumber)
-
         changeText.setOnClickListener {
-            val auth = FirebaseAuth.getInstance()
-            auth.signOut()
-            onBackPressed()
+            FirebaseAuth.getInstance().signOut()
+            onBackPressedDispatcher.onBackPressed()
         }
 
         verifyButton.setOnClickListener {
@@ -75,16 +91,13 @@ class OtpVerificationActivity : AppCompatActivity() {
         }
 
         resendOtpButton.setOnClickListener {
-            // Resend OTP when button is clicked
             startPhoneNumberVerification(phoneNumber)
-            startCountdown()  // Reset the countdown timer
+            viewModel.startCountdown()
         }
     }
 
     private fun startPhoneNumberVerification(phoneNumber: String) {
         try {
-
-
             val options = PhoneAuthOptions.newBuilder(FirebaseAuth.getInstance())
                 .setPhoneNumber(phoneNumber)
                 .setTimeout(30L, TimeUnit.SECONDS)
@@ -92,38 +105,20 @@ class OtpVerificationActivity : AppCompatActivity() {
                 .setCallbacks(callbacks)
                 .build()
             PhoneAuthProvider.verifyPhoneNumber(options)
-            startCountdown()  // Start the countdown when OTP is sent}
-
-        }
-        catch (e: Exception) {
+            viewModel.startCountdown()
+        } catch (e: Exception) {
             Log.d("OtpVerificationActivity", "Error starting phone number verification: ${e.message}")
         }
-    }
-
-    private fun startCountdown() {
-        countdownTimer = object : CountDownTimer(30000, 1000) {
-            override fun onTick(millisUntilFinished: Long) {
-                countdownText.text = "Resend OTP in 00:${(millisUntilFinished / 1000).toString().padStart(2, '0')}"
-            }
-
-            override fun onFinish() {
-                countdownText.text = "You can resend OTP now"
-                resendOtpButton.isEnabled = true
-                resendOtpButton.setTextColor(Color.parseColor("#0066CC"))  // Change text color when enabled
-            }
-        }
-        countdownTimer.start()
     }
 
     private val callbacks = object : PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
         override fun onVerificationCompleted(credential: PhoneAuthCredential) {
             val code = credential.smsCode
             if (code != null) {
-                otpInput.setText(code)
+                viewModel.updateOtp(code)
                 signInWithPhoneAuthCredential(credential)
             }
         }
-
 
         override fun onVerificationFailed(e: FirebaseException) {
             Toast.makeText(this@OtpVerificationActivity, "Verification failed: ${e.message}", Toast.LENGTH_LONG).show()
@@ -147,10 +142,5 @@ class OtpVerificationActivity : AppCompatActivity() {
                     Toast.makeText(this, "Verification Failed", Toast.LENGTH_SHORT).show()
                 }
             }
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        countdownTimer.cancel()
     }
 }

@@ -59,6 +59,7 @@ class Request : Fragment() {
 
         db.collection("BloodRequests")
             .whereEqualTo("requester", phone)
+            .orderBy("timestamp", com.google.firebase.firestore.Query.Direction.DESCENDING)
             .limit(1)
             .get()
             .addOnSuccessListener { result ->
@@ -126,6 +127,7 @@ class Request : Fragment() {
         val phone = FirebaseAuth.getInstance().currentUser?.phoneNumber ?: return
         db.collection("BloodRequests")
             .whereEqualTo("requester", phone)
+            .orderBy("timestamp", com.google.firebase.firestore.Query.Direction.DESCENDING)
             .limit(1)
             .get()
             .addOnSuccessListener { result ->

@@ -16,6 +16,8 @@
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="12dp" />
 
+
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/hospitalRequestsRecyclerView"
         android:layout_width="match_parent"
@@ -23,4 +25,15 @@
         android:layout_below="@id/tvHospitalRequestsTitle"
         android:clipToPadding="false"
         android:paddingBottom="16dp" />
+
+    <TextView
+        android:id="@+id/tvNoRequests"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="No blood requests at the moment"
+        android:textSize="18sp"
+        android:textColor="@color/black"
+        android:layout_centerInParent="true"
+        android:visibility="gone" />
+
 </RelativeLayout>

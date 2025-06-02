@@ -53,6 +53,14 @@ class HospitalRequestsFragment : Fragment() {
                     request?.let { requestList.add(it) }
                 }
                 adapter.notifyDataSetChanged()
+
+                if (requestList.isEmpty()) {
+                    binding.hospitalRequestsRecyclerView.visibility = View.GONE
+                    binding.tvNoRequests.visibility = View.VISIBLE
+                } else {
+                    binding.hospitalRequestsRecyclerView.visibility = View.VISIBLE
+                    binding.tvNoRequests.visibility = View.GONE
+                }
             }
     }
 
@@ -81,9 +89,9 @@ class HospitalRequestsFragment : Fragment() {
 
                 // Update units and status
                 val status = when {
-                    newUnits <= 2 -> "low"
-                    newUnits in 3..5 -> "medium"
-                    else -> "high"
+                    newUnits <= 2 -> "Low"
+                    newUnits in 3..5 -> "Medium"
+                    else -> "High"
                 }
                 // Optional: Deduct units and mark as accepted
                 inventoryRef.update( mapOf(

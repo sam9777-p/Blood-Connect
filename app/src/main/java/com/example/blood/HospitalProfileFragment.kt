@@ -1,17 +1,20 @@
 package com.example.blood
 
 import android.Manifest
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Location
 import android.os.Bundle
 import android.view.*
 import android.widget.*
+import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.blood.viewmodel.HospitalProfileViewModel
 import com.google.android.gms.location.*
+import com.google.firebase.auth.FirebaseAuth
 
 class HospitalProfileFragment : Fragment() {
 
@@ -22,6 +25,7 @@ class HospitalProfileFragment : Fragment() {
     private lateinit var saveBtn: Button
     private lateinit var editBtn: Button
     private lateinit var cancelBtn: Button
+    private lateinit var logoutBtn: Button
 
     private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
     private var currentLocation: Location? = null
@@ -33,7 +37,7 @@ class HospitalProfileFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_hospital_profile, container, false)
-
+        logoutBtn = view.findViewById(R.id.logoutHospitalBtn)
         nameInput = view.findViewById(R.id.hospitalNameEditText)
         cityInput = view.findViewById(R.id.cityEditText)
         contactInput = view.findViewById(R.id.contactEditText)
@@ -43,6 +47,11 @@ class HospitalProfileFragment : Fragment() {
         cancelBtn = view.findViewById(R.id.cancelHospitalEditButton)
 
         viewModel = ViewModelProvider(this)[HospitalProfileViewModel::class.java]
+
+        logoutBtn.setOnClickListener {
+            showLogoutConfirmationDialog()
+        }
+
 
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(requireContext())
         requestLocation()
@@ -121,4 +130,20 @@ class HospitalProfileFragment : Fragment() {
             }
         }
     }
+
+    private fun showLogoutConfirmationDialog() {
+        AlertDialog.Builder(requireContext())
+            .setTitle("Logout")
+            .setMessage("Are you sure you want to log out?")
+            .setPositiveButton("Yes") { _, _ ->
+                FirebaseAuth.getInstance().signOut()
+                Toast.makeText(requireContext(), "Logged out", Toast.LENGTH_SHORT).show()
+                val intent = Intent(requireContext(), LoginSignupActivity::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                startActivity(intent)
+            }
+            .setNegativeButton("Cancel", null)
+            .show()
+    }
+
 }

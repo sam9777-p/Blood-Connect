@@ -122,6 +122,7 @@ class OtpVerificationActivity : AppCompatActivity() {
 
         override fun onVerificationFailed(e: FirebaseException) {
             Toast.makeText(this@OtpVerificationActivity, "Verification failed: ${e.message}", Toast.LENGTH_LONG).show()
+            Log.e("Error sigin", e.message.toString())
         }
 
         override fun onCodeSent(verificationId: String, token: PhoneAuthProvider.ForceResendingToken) {

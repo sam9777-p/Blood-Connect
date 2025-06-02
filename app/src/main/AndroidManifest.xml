@@ -26,14 +26,15 @@
         android:theme="@style/Theme.Blood"
         android:windowSoftInputMode="adjustResize"
         tools:targetApi="31">
+
         <activity
             android:name=".RequestFulfilledActivity"
             android:exported="false"
-            android:parentActivityName=".ui.donor.DonorActivity"/>
+            android:parentActivityName=".ui.donor.DonorActivity" />
         <activity
             android:name=".DonorRequestNotification"
             android:exported="false"
-            android:parentActivityName=".ui.donor.DonorActivity"/>
+            android:parentActivityName=".ui.donor.DonorActivity" />
         <activity
             android:name=".DonorProfile"
             android:exported="false" />

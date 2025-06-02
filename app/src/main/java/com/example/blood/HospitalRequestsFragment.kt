@@ -28,14 +28,11 @@ class HospitalRequestsFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        adapter = HospitalRequestsAdapter(
-            requestList,
+        adapter = HospitalRequestsAdapter(requestList,
             onAccept = { request -> acceptRequest(request) },
             onReject = { request -> rejectRequest(request) }
         )
-        binding.shimmerLayout.startShimmer()
-        binding.shimmerLayout.visibility = View.VISIBLE
-        binding.hospitalRequestsRecyclerView.visibility = View.GONE
+
         binding.hospitalRequestsRecyclerView.layoutManager = LinearLayoutManager(requireContext())
         binding.hospitalRequestsRecyclerView.adapter = adapter
 
@@ -46,38 +43,18 @@ class HospitalRequestsFragment : Fragment() {
         val phone = FirebaseAuth.getInstance().currentUser?.phoneNumber ?: return
         val db = FirebaseFirestore.getInstance()
 
-        // Step 1: Get hospital's city
-        db.collection("Accounts").document(phone).get()
-            .addOnSuccessListener { doc ->
-                val hospitalCity = doc.getString("city") ?: return@addOnSuccessListener
-
-                // Step 2: Get requests from same city
-                db.collection("BloodRequests")
-                    .whereEqualTo("status", "pending")
-                    .whereEqualTo("city", hospitalCity)
-                    .get()
-                    .addOnSuccessListener { snapshot ->
-                        requestList.clear()
-                        for (doc in snapshot.documents) {
-                            val request = doc.toObject(BloodRequest::class.java)
-                            request?.let { requestList.add(it) }
-                        }
-
-                        binding.shimmerLayout.stopShimmer()
-                        binding.shimmerLayout.visibility = View.GONE
-                        binding.hospitalRequestsRecyclerView.visibility = View.VISIBLE
-
-                        adapter.notifyDataSetChanged()
-                    }
-                    .addOnFailureListener {
-                        Toast.makeText(requireContext(), "Failed to load requests", Toast.LENGTH_SHORT).show()
-                    }
-            }
-            .addOnFailureListener {
-                Toast.makeText(requireContext(), "Failed to get hospital data", Toast.LENGTH_SHORT).show()
+        db.collection("BloodRequests")
+            .whereEqualTo("status", "pending")
+            .get()
+            .addOnSuccessListener { snapshot ->
+                requestList.clear()
+                for (doc in snapshot.documents) {
+                    val request = doc.toObject(BloodRequest::class.java)
+                    request?.let { requestList.add(it) }
+                }
+                adapter.notifyDataSetChanged()
             }
     }
-
 
     private fun acceptRequest(request: BloodRequest) {
         val db = FirebaseFirestore.getInstance()
@@ -100,8 +77,19 @@ class HospitalRequestsFragment : Fragment() {
                         fetchRequests()
                     }
             } else {
+                val newUnits = availableUnits - request.units
+
+                // Update units and status
+                val status = when {
+                    newUnits <= 2 -> "low"
+                    newUnits in 3..5 -> "medium"
+                    else -> "high"
+                }
                 // Optional: Deduct units and mark as accepted
-                inventoryRef.update("units", availableUnits - request.units).addOnSuccessListener {
+                inventoryRef.update( mapOf(
+                    "units" to newUnits,
+                    "status" to status
+                )).addOnSuccessListener {
                     //Log.d(TAG, "acceptRequest: ")
                     Log.d("id", "Actual: ${request.id}")
                     db.collection("BloodRequests").document(request.id)

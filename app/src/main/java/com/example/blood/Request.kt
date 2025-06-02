@@ -1,9 +1,7 @@
 package com.example.blood
 
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.*
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -20,13 +18,19 @@ class Request : Fragment() {
     private lateinit var submittedSection: LinearLayout
     private lateinit var requestDetails: TextView
     private lateinit var newRequestButton: Button
+    private lateinit var cancelRequestButton: Button
+    private lateinit var handledByText: TextView
+    private lateinit var donorListHeader: TextView
+    private lateinit var newRequestLayout: LinearLayout
+    private lateinit var donorListLayout: LinearLayout
+
     private val db = FirebaseFirestore.getInstance()
 
     private val bloodGroups = listOf("A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-")
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_request, container, false)
-
+        newRequestLayout = view.findViewById(R.id.newRequestlayout)
         bloodGroupSpinner = view.findViewById(R.id.bloodGroupSpinner)
         unitsEditText = view.findViewById(R.id.unitsEditText)
         purposeEditText = view.findViewById(R.id.purposeEditText)
@@ -34,11 +38,16 @@ class Request : Fragment() {
         submittedSection = view.findViewById(R.id.submittedSection)
         requestDetails = view.findViewById(R.id.requestDetails)
         newRequestButton = view.findViewById(R.id.newRequestButton)
+        cancelRequestButton = view.findViewById(R.id.cancelRequestButton)
+        handledByText = view.findViewById(R.id.handledByText)
+        donorListHeader = view.findViewById(R.id.donorListHeader)
+        donorListLayout = view.findViewById(R.id.donorListLayout)
 
         bloodGroupSpinner.adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_dropdown_item, bloodGroups)
 
         requestButton.setOnClickListener { submitBloodRequest() }
         newRequestButton.setOnClickListener { toggleFormVisibility(true) }
+        cancelRequestButton.setOnClickListener { deleteCurrentRequest() }
 
         checkForExistingRequest()
 
@@ -50,13 +59,20 @@ class Request : Fragment() {
 
         db.collection("BloodRequests")
             .whereEqualTo("requester", phone)
-            .whereIn("status", listOf("pending", "accepted"))
             .limit(1)
             .get()
             .addOnSuccessListener { result ->
                 if (!result.isEmpty) {
                     val doc = result.documents.first()
-                    showSubmittedRequest(doc.data)
+                    val data = doc.data
+                    val status = data?.get("status").toString().lowercase()
+                    if (status == "pending" || status == "notified") {
+                        showSubmittedRequest(data, doc.id)
+                    } else if (status == "fulfilled") {
+                        showSubmittedRequest(data, doc.id, allowNewRequest = true)
+                    } else {
+                        toggleFormVisibility(true)
+                    }
                 } else {
                     toggleFormVisibility(true)
                 }
@@ -66,33 +82,27 @@ class Request : Fragment() {
             }
     }
 
-    private fun showSubmittedRequest(data: Map<String, Any>?) {
+    private fun showSubmittedRequest(data: Map<String, Any>?, requestId: String, allowNewRequest: Boolean = false) {
         toggleFormVisibility(false)
+
         data?.let {
             val group = it["bloodGroup"] ?: ""
             val units = it["units"] ?: ""
             val purpose = it["purpose"] ?: ""
-            val status = it["status"] ?: ""
+            val status = it["status"]?.toString()?.capitalize() ?: ""
             val handledBy = it["handledBy"] as? String
             val donors = it["interestedDonors"] as? List<*> ?: emptyList<String>()
 
-            val baseDetails = "Blood Group: $group\nUnits: $units\nPurpose: $purpose\nStatus: ${status.toString().capitalize()}"
-            requestDetails.text = baseDetails
+            val details = "Blood Group: $group\nUnits: $units\nPurpose: $purpose\nStatus: $status"
+            requestDetails.text = details
 
-            // Show handledBy if present
-            val handledByText = view?.findViewById<TextView>(R.id.handledByText)
-            handledByText?.visibility = if (!handledBy.isNullOrEmpty()) View.VISIBLE else View.GONE
-            handledByText?.text = "Handled By: $handledBy"
-
-            // Show interested donors
-            val donorListHeader = view?.findViewById<TextView>(R.id.donorListHeader)
-            val donorListLayout = view?.findViewById<LinearLayout>(R.id.donorListLayout)
+            handledByText.visibility = if (!handledBy.isNullOrEmpty()) View.VISIBLE else View.GONE
+            handledByText.text = "Handled By: $handledBy"
 
             if (donors.isNotEmpty()) {
-                donorListHeader?.visibility = View.VISIBLE
-                donorListLayout?.visibility = View.VISIBLE
-                donorListLayout?.removeAllViews()
-
+                donorListHeader.visibility = View.VISIBLE
+                donorListLayout.visibility = View.VISIBLE
+                donorListLayout.removeAllViews()
                 donors.forEach { donor ->
                     val donorText = TextView(requireContext()).apply {
                         text = "• $donor"
@@ -100,25 +110,51 @@ class Request : Fragment() {
                         textSize = 15f
                         setPadding(0, 4, 0, 4)
                     }
-                    donorListLayout?.addView(donorText)
+                    donorListLayout.addView(donorText)
                 }
             } else {
-                donorListHeader?.visibility = View.GONE
-                donorListLayout?.visibility = View.GONE
+                donorListHeader.visibility = View.GONE
+                donorListLayout.visibility = View.GONE
             }
+
+            cancelRequestButton.visibility = if (!allowNewRequest) View.VISIBLE else View.GONE
+            newRequestButton.visibility = if (allowNewRequest) View.VISIBLE else View.GONE
         }
     }
 
+    private fun deleteCurrentRequest() {
+        val phone = FirebaseAuth.getInstance().currentUser?.phoneNumber ?: return
+        db.collection("BloodRequests")
+            .whereEqualTo("requester", phone)
+            .limit(1)
+            .get()
+            .addOnSuccessListener { result ->
+                if (!result.isEmpty) {
+                    val docId = result.documents.first().id
+                    db.collection("BloodRequests").document(docId)
+                        .delete()
+                        .addOnSuccessListener {
+                            Toast.makeText(requireContext(), "Request cancelled", Toast.LENGTH_SHORT).show()
+                            toggleFormVisibility(true)
+                        }
+                        .addOnFailureListener {
+                            Toast.makeText(requireContext(), "Failed to cancel request", Toast.LENGTH_SHORT).show()
+                        }
+                }
+            }
+    }
 
     private fun toggleFormVisibility(showForm: Boolean) {
-        val formVisible = showForm
-        bloodGroupSpinner.isVisible = formVisible
-        unitsEditText.isVisible = formVisible
-        purposeEditText.isVisible = formVisible
-        requestButton.isVisible = formVisible
+        newRequestLayout.isVisible = showForm
+        submittedSection.isVisible = !showForm
 
-        submittedSection.isVisible = !formVisible
+        cancelRequestButton.isVisible = false
+        newRequestButton.isVisible = false
+        handledByText.visibility = View.GONE
+        donorListHeader.visibility = View.GONE
+        donorListLayout.visibility = View.GONE
     }
+
 
     private fun submitBloodRequest() {
         val selectedGroup = bloodGroupSpinner.selectedItem.toString()
@@ -131,8 +167,7 @@ class Request : Fragment() {
             return
         }
 
-        val userDoc = db.collection("Accounts").document(phone)
-        userDoc.get().addOnSuccessListener { snapshot ->
+        db.collection("Accounts").document(phone).get().addOnSuccessListener { snapshot ->
             val name = snapshot.getString("firstName") ?: ""
             val city = snapshot.getString("city") ?: ""
             val fcm = snapshot.getString("fcmToken") ?: ""
@@ -152,7 +187,8 @@ class Request : Fragment() {
                 "timestamp" to Timestamp.now(),
                 "status" to "pending",
                 "fcm" to fcm,
-                "volunteers" to emptyList<String>() // Initially empty
+                "volunteers" to emptyList<String>(),
+                "interestedDonors" to emptyList<String>()
             )
 
             db.collection("BloodRequests")

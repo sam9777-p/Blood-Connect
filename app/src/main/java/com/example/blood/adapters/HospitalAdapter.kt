@@ -21,6 +21,9 @@ class HospitalAdapter(private val hospitals: List<HospitalsData>) :
         val hospitalCity: TextView = itemView.findViewById(R.id.hospitalCity)
     }
 
+
+
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HospitalViewHolder {
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.item_hospital, parent, false)

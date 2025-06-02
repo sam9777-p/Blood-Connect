@@ -9,13 +9,30 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.blood.data.InventoryItem
 import com.example.blood.R
 
-class InventoryAdapter(private val items: List<InventoryItem>) :
-    RecyclerView.Adapter<InventoryAdapter.InventoryViewHolder>() {
+class InventoryAdapter(
+    private val items: MutableList<InventoryItem>,
+    private val onItemClick: (String) -> Unit
+) : RecyclerView.Adapter<InventoryAdapter.InventoryViewHolder>() {
 
-    class InventoryViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+    inner class InventoryViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val bloodGroupText: TextView = view.findViewById(R.id.bloodTypeText)
         val unitText: TextView = view.findViewById(R.id.unitCountText)
         val statusText: TextView = view.findViewById(R.id.statusText)
+
+        init {
+            view.setOnClickListener {
+                val position = adapterPosition
+                if (position != RecyclerView.NO_POSITION) {
+                    onItemClick(items[position].bloodGroup)
+                }
+            }
+        }
+    }
+
+    fun updateData(newList: List<InventoryItem>) {
+        items.clear()
+        items.addAll(newList)
+        notifyDataSetChanged()
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): InventoryViewHolder {

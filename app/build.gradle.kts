@@ -117,4 +117,7 @@ dependencies {
     //shimmer effect
     implementation ("com.facebook.shimmer:shimmer:0.5.0")
 
+    //app check
+    implementation("com.google.firebase:firebase-appcheck-playintegrity")
+
 }

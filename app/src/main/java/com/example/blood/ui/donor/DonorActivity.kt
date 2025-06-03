@@ -16,14 +16,7 @@ import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import com.example.blood.CommunityFragment
-import com.example.blood.DonorHistoryFragment
-
-import com.example.blood.HomeFragment
-import com.example.blood.LoginSignupActivity
-import com.example.blood.ProfileFragment
-import com.example.blood.R
-import com.example.blood.Request
+import com.example.blood.*
 import com.example.blood.viewmodel.DonorViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationView
@@ -32,6 +25,7 @@ class DonorActivity : AppCompatActivity() {
 
     private lateinit var drawerLayout: DrawerLayout
     private lateinit var viewModel: DonorViewModel
+    private lateinit var bottomNav: BottomNavigationView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,7 +36,7 @@ class DonorActivity : AppCompatActivity() {
 
         drawerLayout = findViewById(R.id.drawer_layout)
         val navView: NavigationView = findViewById(R.id.nav_view)
-        val bottomNav: BottomNavigationView = findViewById(R.id.bottom_nav)
+        bottomNav = findViewById(R.id.bottom_nav)
 
         viewModel = ViewModelProvider(this)[DonorViewModel::class.java]
 
@@ -92,7 +86,6 @@ class DonorActivity : AppCompatActivity() {
                             val intent = Intent(this, LoginSignupActivity::class.java)
                             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                             startActivity(intent)
-
                             finish()
                         }
                         .setNegativeButton("Cancel", null)
@@ -122,15 +115,35 @@ class DonorActivity : AppCompatActivity() {
             }
             viewModel.checkProfileStatus()
         }
+
+        // Observe back stack changes and update bottom navigation accordingly
+        supportFragmentManager.addOnBackStackChangedListener {
+            val fragment = supportFragmentManager.findFragmentById(R.id.fragment_container)
+            when (fragment) {
+                is HomeFragment -> bottomNav.menu.findItem(R.id.nav_home).isChecked = true
+                is CommunityFragment -> bottomNav.menu.findItem(R.id.nav_donate).isChecked = true
+                is Request -> bottomNav.menu.findItem(R.id.nav_request).isChecked = true
+                else -> {
+                    for (i in 0 until bottomNav.menu.size()) {
+                        bottomNav.menu.getItem(i).isChecked = false
+                    }
+                }
+            }
+        }
     }
 
     private fun loadFragment(fragment: Fragment, fromDrawer: Boolean = false) {
+        val currentFragment = supportFragmentManager.findFragmentById(R.id.fragment_container)
+        if (currentFragment != null && currentFragment::class == fragment::class) {
+            return // Prevent reloading same fragment
+        }
+
         supportFragmentManager.beginTransaction()
             .replace(R.id.fragment_container, fragment)
+            .addToBackStack(null)
             .commit()
 
         if (fromDrawer) {
-            val bottomNav: BottomNavigationView = findViewById(R.id.bottom_nav)
             for (i in 0 until bottomNav.menu.size()) {
                 bottomNav.menu.getItem(i).isChecked = false
             }
@@ -138,22 +151,22 @@ class DonorActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
-
         if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
             drawerLayout.closeDrawer(GravityCompat.START)
         } else {
-            AlertDialog.Builder(this)
-                .setTitle("Exit App")
-                .setMessage("Are you sure you want to exit?")
-                .setPositiveButton("Yes") { _, _ ->
-                    super.onBackPressed()
-                    finishAffinity() // Closes all activities and exits app
-                }
-                .setNegativeButton("No", null)
-                .show()
+            val fragmentManager = supportFragmentManager
+            if (fragmentManager.backStackEntryCount > 1) {
+                fragmentManager.popBackStack()
+            } else {
+                AlertDialog.Builder(this)
+                    .setTitle("Exit App")
+                    .setMessage("Are you sure you want to exit?")
+                    .setPositiveButton("Yes") { _, _ ->
+                        finishAffinity()
+                    }
+                    .setNegativeButton("No", null)
+                    .show()
+            }
         }
     }
-
-
-
 }

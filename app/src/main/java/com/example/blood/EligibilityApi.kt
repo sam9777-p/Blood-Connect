@@ -12,3 +12,4 @@ interface EligibilityApi {
     @POST("/predict")
     fun analyzeEligibility(@Body eligibilityRequest: EligibilityRequest): Call<EligibilityResponse>
 }
+

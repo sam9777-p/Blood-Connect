@@ -91,6 +91,7 @@ class ProfileRepository(private val fusedLocationClient: FusedLocationProviderCl
             .baseUrl("https://blood-ha-api.onrender.com/")
             .addConverterFactory(GsonConverterFactory.create())
             .build()
+
         val api = retrofit.create(EligibilityApi::class.java)
         val request = EligibilityRequest(
             height = heightStr.toFloat(),

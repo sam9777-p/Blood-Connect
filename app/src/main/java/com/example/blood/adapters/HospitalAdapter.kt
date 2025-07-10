@@ -22,8 +22,6 @@ class HospitalAdapter(private val hospitals: List<HospitalsData>) :
     }
 
 
-
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HospitalViewHolder {
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.item_hospital, parent, false)

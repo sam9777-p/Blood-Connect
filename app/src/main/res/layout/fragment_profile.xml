@@ -9,12 +9,14 @@
         android:id="@+id/topProgressBar"
         android:layout_width="match_parent"
         android:layout_height="4dp"
+        android:layout_gravity="top"
         android:visibility="gone"
         style="@style/Widget.Material3.LinearProgressIndicator"
         android:indeterminate="true"
         app:indicatorColor="@color/md_theme_primary"
         app:trackColor="@color/md_theme_surfaceVariant"
-        app:trackThickness="4dp" />
+        app:trackThickness="4dp"
+        android:elevation="8dp"/>
 
     <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"

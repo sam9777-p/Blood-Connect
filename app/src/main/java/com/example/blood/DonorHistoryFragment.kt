@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.blood.adapters.HistoryAdapter
 import com.example.blood.viewmodel.DonorHistoryViewModel
 
-class DonorHistoryFragment : Fragment(R.layout.fragment_donor_history) {
+class DonorHistoryFragment : Fragment(  R.layout.fragment_donor_history) {
 
     private lateinit var recycler: RecyclerView
     private lateinit var myAdapter: HistoryAdapter

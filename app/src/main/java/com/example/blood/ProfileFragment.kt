@@ -8,7 +8,9 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.blood.viewmodel.ProfileViewModel
 import com.google.android.gms.location.LocationServices
+import com.google.android.material.progressindicator.LinearProgressIndicator
 import java.util.*
+
 
 class ProfileFragment : Fragment() {
     private lateinit var viewModel: ProfileViewModel
@@ -24,7 +26,7 @@ class ProfileFragment : Fragment() {
     private lateinit var editButton: Button
     private lateinit var cancelButton: Button
 
-    private lateinit var progressBar: ProgressBar
+    private lateinit var progressBar: LinearProgressIndicator
 
 
     private var isEditMode = false
@@ -80,7 +82,25 @@ class ProfileFragment : Fragment() {
                 "Female" -> genderGroup.check(R.id.female)
                 else -> genderGroup.check(R.id.other)
             }
+
+
+            val isProfileEmpty = data["bloodGroup"].isNullOrBlank() &&
+                    data["age"].isNullOrBlank() &&
+                    data["weight"].isNullOrBlank() &&
+                    data["height"].isNullOrBlank() &&
+                    data["haemoglobin"].isNullOrBlank() &&
+                    data["lastDonationDate"].isNullOrBlank() &&
+                    data["gender"].isNullOrBlank()
+
+            if (isProfileEmpty) {
+                toggleEditMode(true)
+            } else {
+                toggleEditMode(false)
+            }
+
         }
+
+
 
         viewModel.saveSuccess.observe(viewLifecycleOwner) { success ->
             hideProgress()
@@ -89,6 +109,7 @@ class ProfileFragment : Fragment() {
             viewModel.loadProfile()
         }
     }
+
 
     private fun performSave() {
         val genderId = genderGroup.checkedRadioButtonId
@@ -100,15 +121,58 @@ class ProfileFragment : Fragment() {
         val haemoglobinStr = haemoglobinInput.text.toString()
         val donationDate = lastDonationDate.text.toString()
 
-        if (bloodGroup.isBlank() || gender.isBlank() || ageStr.isBlank() ||
-            weightStr.isBlank() || heightStr.isBlank() || haemoglobinStr.isBlank() || donationDate.isBlank()
-        ) {
-            Toast.makeText(requireContext(), "Fill all fields", Toast.LENGTH_SHORT).show()
-            return
+        // Reset errors first
+        bloodGroupText.error = null
+        ageInput.error = null
+        weightInput.error = null
+        heightInput.error = null
+        haemoglobinInput.error = null
+        lastDonationDate.error = null
+        // Gender can't have setError, so we handle separately below
+
+        var isValid = true
+
+        if (bloodGroup.isBlank()) {
+            bloodGroupText.error = "Please select blood group"
+            isValid = false
         }
+
+        if (gender.isBlank()) {
+            Toast.makeText(requireContext(), "Please select gender", Toast.LENGTH_SHORT).show()
+            isValid = false
+        }
+
+        if (ageStr.isBlank()) {
+            ageInput.error = "Age is required"
+            isValid = false
+        }
+
+        if (weightStr.isBlank()) {
+            weightInput.error = "Weight is required"
+            isValid = false
+        }
+
+        if (heightStr.isBlank()) {
+            heightInput.error = "Height is required"
+            isValid = false
+        }
+
+        if (haemoglobinStr.isBlank()) {
+            haemoglobinInput.error = "Haemoglobin is required"
+            isValid = false
+        }
+
+        if (donationDate.isBlank()) {
+            lastDonationDate.error = "Select last donation date"
+            isValid = false
+        }
+
+        if (!isValid) return
+
         showProgress()
         viewModel.saveUserProfile(bloodGroup, gender, ageStr, weightStr, heightStr, haemoglobinStr, donationDate)
     }
+
 
     private fun showDatePicker() {
         val calendar = Calendar.getInstance()

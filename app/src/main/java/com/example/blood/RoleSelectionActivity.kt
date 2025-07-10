@@ -1,6 +1,5 @@
 package com.example.blood
 
-import android.R.attr.phoneNumber
 import android.content.Intent
 import android.os.Bundle
 import android.widget.*

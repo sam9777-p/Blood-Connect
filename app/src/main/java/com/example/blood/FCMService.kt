@@ -26,6 +26,7 @@ class FCMService : FirebaseMessagingService() {
                 "Blood Requests",
                 NotificationManager.IMPORTANCE_HIGH
             )
+
             val sysNotificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
             sysNotificationManager.createNotificationChannel(channel)
         }

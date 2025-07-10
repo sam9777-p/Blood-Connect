@@ -83,10 +83,19 @@ class HospitalProfileFragment : Fragment() {
 
     private fun observeViewModel() {
         viewModel.profileData.observe(viewLifecycleOwner) { data ->
-            nameInput.setText(data["hospitalName"] as? String ?: "")
-            cityInput.setText(data["city"] as? String ?: "")
-            contactInput.setText(data["contact"] as? String ?: "")
-            addressInput.setText(data["address"] as? String ?: "")
+            val name = data["hospitalName"] as? String ?: ""
+            val city = data["city"] as? String ?: ""
+            val contact = data["contact"] as? String ?: ""
+            val address = data["address"] as? String ?: ""
+
+            nameInput.setText(name)
+            cityInput.setText(city)
+            contactInput.setText(contact)
+            addressInput.setText(address)
+
+            // 🔍 Check if it's a first-time profile (all fields empty)
+            val isFirstTimeUser = name.isBlank()  && contact.isBlank() && address.isBlank()
+            toggleEditMode(isFirstTimeUser)
         }
 
         viewModel.saveSuccess.observe(viewLifecycleOwner) { success ->
